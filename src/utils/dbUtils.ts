@@ -19,7 +19,10 @@ export function openDatabase(): Promise<IDBDatabase> {
         store.createIndex('createdAt', 'createdAt');
       }
       if (!db.objectStoreNames.contains('dependencies')) {
-        const depStore = db.createObjectStore('dependencies', { keyPath: 'id', autoIncrement: true });
+        const depStore = db.createObjectStore('dependencies', {
+          keyPath: 'id',
+          autoIncrement: true,
+        });
         depStore.createIndex('sourceTaskId', 'sourceTaskId');
         depStore.createIndex('targetTaskId', 'targetTaskId');
       }

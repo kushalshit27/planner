@@ -1,0 +1,12 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Check TypeScript types
+echo "Checking TypeScript types..."
+bun run type-check
+
+# Lint and format staged files
+echo "Running Biome on staged files..."
+bunx biome check --write --staged --no-errors-on-unmatched
+
+# Note: Commit message validation happens in commit-msg hook

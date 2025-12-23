@@ -3,6 +3,6 @@ export function useDragDrop() {
   return {
     onDragStart: () => undefined,
     onDragMove: () => undefined,
-    onDragEnd: () => undefined
+    onDragEnd: () => undefined,
   };
 }

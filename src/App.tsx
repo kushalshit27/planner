@@ -1,9 +1,9 @@
-import { useEffect } from 'preact/hooks';
+import { useSignal } from '@preact/signals';
 import { Database, RefreshCw } from 'lucide-react';
+import { useEffect } from 'preact/hooks';
 import { TaskList } from './components/task/TaskList';
 import { Timeline } from './components/timeline/Timeline';
 import { hydrateTasks, seedSampleTasks, tasks } from './store/taskStore';
-import { useSignal } from '@preact/signals';
 import { cn } from './utils/cn';
 
 export function App() {
@@ -16,7 +16,7 @@ export function App() {
       isSyncing.value = false;
     };
     void load();
-  }, []);
+  }, [isSyncing]);
 
   const handleSeed = async () => {
     isSyncing.value = true;

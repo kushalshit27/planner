@@ -1,6 +1,6 @@
-import { signal, computed } from '@preact/signals';
+import { computed, signal } from '@preact/signals';
 import dayjs from 'dayjs';
-import type { Task, Priority, Status } from '../types';
+import type { Priority, Status, Task } from '../types';
 import { deleteTaskById, getAllTasks, replaceTasks, upsertTask } from '../utils/storageUtils';
 
 export const tasks = signal<Task[]>([]);
@@ -23,7 +23,7 @@ function buildSampleTasks(): Task[] {
       color: palette[1],
       dependencies: [],
       createdAt: dayjs().toDate(),
-      updatedAt: dayjs().toDate()
+      updatedAt: dayjs().toDate(),
     },
     {
       id: crypto.randomUUID(),
@@ -37,7 +37,7 @@ function buildSampleTasks(): Task[] {
       color: palette[0],
       dependencies: [],
       createdAt: dayjs().toDate(),
-      updatedAt: dayjs().toDate()
+      updatedAt: dayjs().toDate(),
     },
     {
       id: crypto.randomUUID(),
@@ -51,8 +51,8 @@ function buildSampleTasks(): Task[] {
       color: palette[2],
       dependencies: [],
       createdAt: dayjs().toDate(),
-      updatedAt: dayjs().toDate()
-    }
+      updatedAt: dayjs().toDate(),
+    },
   ];
 }
 
@@ -96,7 +96,7 @@ export async function saveTask(partial: {
     color: partial.color ?? palette[0],
     dependencies: [],
     createdAt: now.toDate(),
-    updatedAt: now.toDate()
+    updatedAt: now.toDate(),
   };
 
   await upsertTask(task);
@@ -109,6 +109,8 @@ export async function removeTask(id: string): Promise<void> {
 }
 
 export async function moveTaskDates(id: string, startDate: Date, endDate: Date): Promise<void> {
-  await import('../utils/storageUtils').then(({ updateTaskDates }) => updateTaskDates(id, startDate, endDate));
+  await import('../utils/storageUtils').then(({ updateTaskDates }) =>
+    updateTaskDates(id, startDate, endDate)
+  );
   await hydrateTasks();
 }

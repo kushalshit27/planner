@@ -20,7 +20,9 @@ export function Timeline() {
     delta: number;
   } | null>(null);
 
-  const list = [...tasks.value].sort((a, b) => dayjs(a.startDate).valueOf() - dayjs(b.startDate).valueOf());
+  const list = [...tasks.value].sort(
+    (a, b) => dayjs(a.startDate).valueOf() - dayjs(b.startDate).valueOf()
+  );
   const startOfWeek = (list[0] ? dayjs(list[0].startDate) : dayjs()).startOf('week');
   const days = Array.from({ length: 7 }, (_, i) => startOfWeek.add(i, 'day'));
 
@@ -57,10 +59,10 @@ export function Timeline() {
 
         <div class="relative">
           {list.map((task: Task, idx: number) => {
-            const offsetDays = dayjs(task.startDate).diff(startOfWeek, 'day');
+            const _offsetDays = dayjs(task.startDate).diff(startOfWeek, 'day');
             const durationDays = Math.max(1, dayjs(task.endDate).diff(task.startDate, 'day') + 1);
             const isActive = drag.value?.id === task.id;
-            const delta = isActive ? drag.value?.delta ?? 0 : 0;
+            const delta = isActive ? (drag.value?.delta ?? 0) : 0;
 
             let displayStart = dayjs(task.startDate);
             let displayEnd = dayjs(task.endDate);
@@ -89,7 +91,12 @@ export function Timeline() {
               <div
                 key={task.id}
                 class="absolute rounded-lg bg-blue-600 text-white text-xs px-3 py-2 shadow-sm"
-                style={{ left: `${left}px`, width: `${width}px`, top: `${top}px`, height: `${TASK_HEIGHT}px` }}
+                style={{
+                  left: `${left}px`,
+                  width: `${width}px`,
+                  top: `${top}px`,
+                  height: `${TASK_HEIGHT}px`,
+                }}
                 onPointerDown={(e) => {
                   (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
                   drag.value = {
@@ -100,7 +107,7 @@ export function Timeline() {
                     originStart: dayjs(task.startDate),
                     originEnd: dayjs(task.endDate),
                     durationDays,
-                    delta: 0
+                    delta: 0,
                   };
                 }}
                 onPointerMove={(e) => {
@@ -164,17 +171,27 @@ export function Timeline() {
                       originStart: dayjs(task.startDate),
                       originEnd: dayjs(task.endDate),
                       durationDays,
-                      delta: 0
+                      delta: 0,
                     };
                   }}
                   onPointerMove={(e) => {
-                    if (!drag.value || drag.value.id !== task.id || drag.value.mode !== 'resize-start') return;
+                    if (
+                      !drag.value ||
+                      drag.value.id !== task.id ||
+                      drag.value.mode !== 'resize-start'
+                    )
+                      return;
                     const deltaPx = e.clientX - drag.value.startX;
                     const deltaDays = Math.round(deltaPx / DAY_WIDTH);
                     drag.value = { ...drag.value, delta: deltaDays };
                   }}
                   onPointerUp={async (e) => {
-                    if (!drag.value || drag.value.id !== task.id || drag.value.mode !== 'resize-start') return;
+                    if (
+                      !drag.value ||
+                      drag.value.id !== task.id ||
+                      drag.value.mode !== 'resize-start'
+                    )
+                      return;
                     (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
                     const maxDelta = drag.value.durationDays - 1;
                     const clamped = Math.min(drag.value.delta, maxDelta - 1);
@@ -200,20 +217,33 @@ export function Timeline() {
                       originStart: dayjs(task.startDate),
                       originEnd: dayjs(task.endDate),
                       durationDays,
-                      delta: 0
+                      delta: 0,
                     };
                   }}
                   onPointerMove={(e) => {
-                    if (!drag.value || drag.value.id !== task.id || drag.value.mode !== 'resize-end') return;
+                    if (
+                      !drag.value ||
+                      drag.value.id !== task.id ||
+                      drag.value.mode !== 'resize-end'
+                    )
+                      return;
                     const deltaPx = e.clientX - drag.value.startX;
                     const deltaDays = Math.round(deltaPx / DAY_WIDTH);
                     drag.value = { ...drag.value, delta: deltaDays };
                   }}
                   onPointerUp={async (e) => {
-                    if (!drag.value || drag.value.id !== task.id || drag.value.mode !== 'resize-end') return;
+                    if (
+                      !drag.value ||
+                      drag.value.id !== task.id ||
+                      drag.value.mode !== 'resize-end'
+                    )
+                      return;
                     (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
                     const minDuration = 1;
-                    const clamped = Math.max(drag.value.delta, minDuration - drag.value.durationDays);
+                    const clamped = Math.max(
+                      drag.value.delta,
+                      minDuration - drag.value.durationDays
+                    );
                     const newEnd = drag.value.originEnd.add(clamped, 'day');
                     await moveTaskDates(task.id, drag.value.originStart.toDate(), newEnd.toDate());
                     drag.value = null;
