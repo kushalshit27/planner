@@ -4,9 +4,9 @@ import { moveTaskDates, tasks } from '../../store/taskStore';
 import type { Task } from '../../types';
 import { cn } from '../../utils/cn';
 
-const ROW_HEIGHT = 56;
-const TASK_HEIGHT = 36;
-const DAY_WIDTH = 110;
+const ROW_HEIGHT = 72;
+const TASK_HEIGHT = 48;
+const DAY_WIDTH = 140;
 
 export function Timeline() {
 	const drag = useSignal<{
@@ -37,18 +37,21 @@ export function Timeline() {
 	}
 
 	return (
-		<div class="w-full min-w-[760px]">
-			<div class="grid grid-cols-7 gap-2 text-center text-xs text-slate-700 mb-3">
+		<div class="w-full min-w-[920px] pb-2">
+			<div class="grid grid-cols-7 gap-3 text-center text-xs text-slate-700 mb-4">
 				{days.map((d) => (
-					<div key={d.toString()} class="py-2 bg-slate-50 border rounded-lg">
+					<div
+						key={d.toString()}
+						class="py-3 rounded-lg border border-slate-200 bg-gradient-to-b from-white to-slate-50 shadow-xs"
+					>
 						<div class="font-semibold text-sm">{d.format('ddd')}</div>
-						<div class="text-[11px] text-slate-600">{d.format('MMM D')}</div>
+						<div class="text-[12px] text-slate-600">{d.format('MMM D')}</div>
 					</div>
 				))}
 			</div>
 
 			<div
-				class="relative border rounded-lg bg-slate-50 overflow-hidden"
+				class="relative border border-slate-200 rounded-xl bg-slate-50/80 overflow-hidden"
 				style={{ minHeight: `${ROW_HEIGHT * Math.max(1, list.length)}px` }}
 			>
 				<div class="absolute inset-0 grid grid-cols-7">
@@ -56,7 +59,7 @@ export function Timeline() {
 						<div
 							key={d.toString()}
 							class={cn(
-								'border-r border-dashed border-slate-200',
+								'border-r border-dashed border-slate-300',
 								idx === days.length - 1 && 'border-r-0'
 							)}
 						/>
@@ -105,12 +108,13 @@ export function Timeline() {
 						return (
 							<div
 								key={task.id}
-								class="absolute rounded-lg bg-blue-600 text-white text-xs px-3 py-2 shadow-sm"
+								class="absolute rounded-xl text-white text-xs px-4 py-2 shadow-md transition will-change-transform"
 								style={{
 									left: `${left}px`,
 									width: `${width}px`,
 									top: `${top}px`,
 									height: `${TASK_HEIGHT}px`,
+									backgroundColor: task.color,
 								}}
 								onPointerDown={(e) => {
 									(e.currentTarget as HTMLElement).setPointerCapture(
@@ -188,7 +192,7 @@ export function Timeline() {
 
 								{/* Resize handles */}
 								<div
-									class="absolute inset-y-1 left-0 w-2 cursor-ew-resize rounded-l-md bg-white/20 hover:bg-white/30"
+									class="absolute inset-y-1 left-0 w-4 cursor-ew-resize rounded-l-md bg-white/25 hover:bg-white/40"
 									onPointerDown={(e) => {
 										e.stopPropagation();
 										(e.currentTarget as HTMLElement).setPointerCapture(
@@ -242,7 +246,7 @@ export function Timeline() {
 									}}
 								/>
 								<div
-									class="absolute inset-y-1 right-0 w-2 cursor-ew-resize rounded-r-md bg-white/20 hover:bg-white/30"
+									class="absolute inset-y-1 right-0 w-4 cursor-ew-resize rounded-r-md bg-white/25 hover:bg-white/40"
 									onPointerDown={(e) => {
 										e.stopPropagation();
 										(e.currentTarget as HTMLElement).setPointerCapture(
