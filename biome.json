@@ -5,27 +5,43 @@
     "clientKind": "git",
     "useIgnoreFile": true
   },
+
   "files": {
-    "ignoreUnknown": false
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/node_modules",
+      "!**/*.md",
+      "!examples",
+      "!**/temp",
+      "!**/space"
+    ]
   },
   "formatter": {
     "enabled": true,
-    "indentStyle": "space",
-    "indentWidth": 2,
-    "lineWidth": 100
+    "indentStyle": "tab",
+    "indentWidth": 2
   },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
       "style": {
-        "noNonNullAssertion": "off"
+        "noNonNullAssertion": "error",
+        "useTemplate": "error"
       },
       "suspicious": {
-        "noExplicitAny": "warn"
+        "noExplicitAny": "warn",
+        "noTemplateCurlyInString": "off",
+        "noControlCharactersInRegex": "off",
+        "noImplicitAnyLet": "error",
+        "noAssignInExpressions": "error"
       },
       "correctness": {
-        "useExhaustiveDependencies": "warn"
+        "useExhaustiveDependencies": "warn",
+        "noUnusedImports": "error",
+        "noUnusedVariables": "error",
+        "noUnusedPrivateClassMembers": "error"
       },
       "a11y": {
         "recommended": true
