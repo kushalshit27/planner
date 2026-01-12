@@ -24,7 +24,7 @@ export const isSidebarCollapsed = signal<boolean>(false);
 export const currentDate = signal<Date>(new Date());
 
 // Timeline zoom level (column width in pixels)
-export const timelineZoom = signal<number>(45);
+const _timelineZoom = signal<number>(45);
 
 /**
  * Change the current view mode

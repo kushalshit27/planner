@@ -11,6 +11,7 @@ import {
 } from '../../store/uiStore';
 import type { Task } from '../../types';
 import { cn } from '../../utils/cn';
+import { formatDate } from '../../utils/dateUtils';
 
 interface TaskCardProps {
 	task: Task;
@@ -48,17 +49,11 @@ export function TaskCard({ task }: TaskCardProps) {
 	};
 
 	return (
-		<div
+		<button
+			type="button"
 			onClick={handleClick}
-			onKeyDown={(e) => {
-				if (e.key === 'Enter' || e.key === ' ') {
-					handleClick();
-				}
-			}}
-			role="button"
-			tabIndex={0}
 			className={cn(
-				'group cursor-pointer px-4 py-3 transition-colors hover:bg-gray-50',
+				'group w-full cursor-pointer px-4 py-3 text-left transition-colors hover:bg-gray-50',
 				isSelected && 'bg-blue-50 hover:bg-blue-50'
 			)}
 		>
@@ -132,8 +127,14 @@ export function TaskCard({ task }: TaskCardProps) {
 							<span className="text-xs text-gray-500">{task.category}</span>
 						)}
 					</div>
+
+					{/* Date range */}
+					<div className="mt-1 text-xs text-gray-500">
+						{formatDate(task.startDate, 'MMM DD')} -{' '}
+						{formatDate(task.endDate, 'MMM DD')}
+					</div>
 				</div>
 			</div>
-		</div>
+		</button>
 	);
 }

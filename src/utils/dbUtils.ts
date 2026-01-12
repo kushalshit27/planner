@@ -75,7 +75,7 @@ export async function getDB(): Promise<IDBDatabase> {
 /**
  * Close the database connection
  */
-export function closeDB(): void {
+function _closeDB(): void {
 	if (dbInstance) {
 		dbInstance.close();
 		dbInstance = null;

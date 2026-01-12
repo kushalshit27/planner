@@ -44,7 +44,9 @@
         "noUnusedPrivateClassMembers": "error"
       },
       "a11y": {
-        "recommended": true
+        "recommended": true,
+        "useSemanticElements": "warn",
+        "noStaticElementInteractions": "warn"
       }
     }
   },

@@ -2,7 +2,7 @@
  * Date utility functions using dayjs
  */
 
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
@@ -24,7 +24,7 @@ export function getWeekStart(date: Date): Date {
 /**
  * Get end of week (Sunday) for a given date
  */
-export function getWeekEnd(date: Date): Date {
+function _getWeekEnd(date: Date): Date {
 	return dayjs(date).endOf('isoWeek').toDate();
 }
 
@@ -92,14 +92,14 @@ export function addDays(date: Date, days: number): Date {
 /**
  * Subtract days from a date
  */
-export function subtractDays(date: Date, days: number): Date {
+function _subtractDays(date: Date, days: number): Date {
 	return dayjs(date).subtract(days, 'day').toDate();
 }
 
 /**
  * Check if date is between two dates (inclusive)
  */
-export function isBetween(date: Date, start: Date, end: Date): boolean {
+function _isBetween(date: Date, start: Date, end: Date): boolean {
 	const d = dayjs(date);
 	return (
 		d.isSameOrAfter(dayjs(start), 'day') && d.isSameOrBefore(dayjs(end), 'day')
@@ -109,21 +109,21 @@ export function isBetween(date: Date, start: Date, end: Date): boolean {
 /**
  * Get start of month
  */
-export function getMonthStart(date: Date): Date {
+function _getMonthStart(date: Date): Date {
 	return dayjs(date).startOf('month').toDate();
 }
 
 /**
  * Get end of month
  */
-export function getMonthEnd(date: Date): Date {
+function _getMonthEnd(date: Date): Date {
 	return dayjs(date).endOf('month').toDate();
 }
 
 /**
  * Get dates for a month view (including padding)
  */
-export function getMonthDates(date: Date): Date[] {
+function _getMonthDates(date: Date): Date[] {
 	const start = dayjs(date).startOf('month').startOf('isoWeek');
 	const end = dayjs(date).endOf('month').endOf('isoWeek');
 	const days = end.diff(start, 'day') + 1;

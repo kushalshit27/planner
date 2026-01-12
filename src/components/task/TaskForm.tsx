@@ -17,7 +17,6 @@ import {
 	taskFormMode,
 } from '../../store/uiStore';
 import type { Task, TaskPriority, TaskStatus } from '../../types';
-import { cn } from '../../utils/cn';
 
 const statuses: TaskStatus[] = ['Backlog', 'To Do', 'In Progress', 'Done'];
 const priorities: TaskPriority[] = ['Low', 'Medium', 'High', 'Urgent'];
@@ -60,7 +59,7 @@ export function TaskForm() {
 				dependencies: [],
 			});
 		}
-	}, [mode, selectedTaskId.value]);
+	}, [mode]);
 
 	const handleSubmit = async (e: Event) => {
 		e.preventDefault();
@@ -79,15 +78,25 @@ export function TaskForm() {
 
 		try {
 			if (mode === 'create') {
+				if (
+					!formData.startDate ||
+					!formData.endDate ||
+					!formData.priority ||
+					!formData.status ||
+					!formData.color
+				) {
+					console.error('Missing required fields');
+					return;
+				}
 				const newTask: Task = {
 					id: crypto.randomUUID(),
 					title: formData.title.trim(),
 					description: formData.description || '',
-					startDate: formData.startDate!,
-					endDate: formData.endDate!,
-					priority: formData.priority!,
-					status: formData.status!,
-					color: formData.color!,
+					startDate: formData.startDate,
+					endDate: formData.endDate,
+					priority: formData.priority,
+					status: formData.status,
+					color: formData.color,
 					category: formData.category,
 					dependencies: formData.dependencies || [],
 					createdAt: new Date(),
@@ -158,10 +167,14 @@ export function TaskForm() {
 				<form onSubmit={handleSubmit}>
 					{/* Title */}
 					<div className="mb-4">
-						<label className="mb-1 block text-sm font-medium text-gray-700">
+						<label
+							htmlFor="task-title"
+							className="mb-1 block text-sm font-medium text-gray-700"
+						>
 							Title *
 						</label>
 						<input
+							id="task-title"
 							type="text"
 							value={formData.title}
 							onInput={(e) =>
@@ -175,10 +188,14 @@ export function TaskForm() {
 
 					{/* Description */}
 					<div className="mb-4">
-						<label className="mb-1 block text-sm font-medium text-gray-700">
+						<label
+							htmlFor="task-description"
+							className="mb-1 block text-sm font-medium text-gray-700"
+						>
 							Description
 						</label>
 						<textarea
+							id="task-description"
 							value={formData.description}
 							onInput={(e) =>
 								setFormData({ ...formData, description: e.currentTarget.value })
@@ -192,10 +209,14 @@ export function TaskForm() {
 					{/* Dates */}
 					<div className="mb-4 grid grid-cols-2 gap-4">
 						<div>
-							<label className="mb-1 block text-sm font-medium text-gray-700">
+							<label
+								htmlFor="task-start-date"
+								className="mb-1 block text-sm font-medium text-gray-700"
+							>
 								Start Date *
 							</label>
 							<input
+								id="task-start-date"
 								type="date"
 								value={formData.startDate?.toISOString().split('T')[0]}
 								onInput={(e) =>
@@ -209,10 +230,14 @@ export function TaskForm() {
 							/>
 						</div>
 						<div>
-							<label className="mb-1 block text-sm font-medium text-gray-700">
+							<label
+								htmlFor="task-end-date"
+								className="mb-1 block text-sm font-medium text-gray-700"
+							>
 								End Date *
 							</label>
 							<input
+								id="task-end-date"
 								type="date"
 								value={formData.endDate?.toISOString().split('T')[0]}
 								onInput={(e) =>
@@ -230,10 +255,14 @@ export function TaskForm() {
 					{/* Status and Priority */}
 					<div className="mb-4 grid grid-cols-2 gap-4">
 						<div>
-							<label className="mb-1 block text-sm font-medium text-gray-700">
+							<label
+								htmlFor="task-status"
+								className="mb-1 block text-sm font-medium text-gray-700"
+							>
 								Status
 							</label>
 							<select
+								id="task-status"
 								value={formData.status}
 								onChange={(e) =>
 									setFormData({
@@ -251,10 +280,14 @@ export function TaskForm() {
 							</select>
 						</div>
 						<div>
-							<label className="mb-1 block text-sm font-medium text-gray-700">
+							<label
+								htmlFor="task-priority"
+								className="mb-1 block text-sm font-medium text-gray-700"
+							>
 								Priority
 							</label>
 							<select
+								id="task-priority"
 								value={formData.priority}
 								onChange={(e) =>
 									setFormData({
@@ -276,10 +309,14 @@ export function TaskForm() {
 					{/* Category and Color */}
 					<div className="mb-4 grid grid-cols-2 gap-4">
 						<div>
-							<label className="mb-1 block text-sm font-medium text-gray-700">
+							<label
+								htmlFor="task-category"
+								className="mb-1 block text-sm font-medium text-gray-700"
+							>
 								Category
 							</label>
 							<input
+								id="task-category"
 								type="text"
 								value={formData.category}
 								onInput={(e) =>
@@ -290,10 +327,14 @@ export function TaskForm() {
 							/>
 						</div>
 						<div>
-							<label className="mb-1 block text-sm font-medium text-gray-700">
+							<label
+								htmlFor="task-color"
+								className="mb-1 block text-sm font-medium text-gray-700"
+							>
 								Color
 							</label>
 							<select
+								id="task-color"
 								value={formData.color}
 								onChange={(e) =>
 									setFormData({ ...formData, color: e.currentTarget.value })

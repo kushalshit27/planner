@@ -22,14 +22,14 @@ function serializeTask(task: Task): unknown {
 /**
  * Deserialize task from storage (convert ISO strings to Dates)
  */
-function deserializeTask(data: any): Task {
+function deserializeTask(data: Record<string, unknown>): Task {
 	return {
 		...data,
-		startDate: new Date(data.startDate),
-		endDate: new Date(data.endDate),
-		createdAt: new Date(data.createdAt),
-		updatedAt: new Date(data.updatedAt),
-	};
+		startDate: new Date(data.startDate as string),
+		endDate: new Date(data.endDate as string),
+		createdAt: new Date(data.createdAt as string),
+		updatedAt: new Date(data.updatedAt as string),
+	} as Task;
 }
 
 /**
@@ -50,7 +50,7 @@ export async function createTask(task: Task): Promise<void> {
 /**
  * Get a single task by ID
  */
-export async function getTask(id: string): Promise<Task | undefined> {
+async function _getTask(id: string): Promise<Task | undefined> {
 	const db = await getDB();
 	return new Promise((resolve, reject) => {
 		const transaction = db.transaction([STORES.TASKS], 'readonly');
@@ -131,7 +131,7 @@ export async function clearAllTasks(): Promise<void> {
 /**
  * Get tasks by date range
  */
-export async function getTasksByDateRange(
+async function _getTasksByDateRange(
 	startDate: Date,
 	endDate: Date
 ): Promise<Task[]> {
@@ -174,7 +174,7 @@ export async function bulkCreateTasks(tasks: Task[]): Promise<void> {
 /**
  * Save a setting to IndexedDB
  */
-export async function saveSetting(key: string, value: unknown): Promise<void> {
+async function _saveSetting(key: string, value: unknown): Promise<void> {
 	const db = await getDB();
 	return new Promise((resolve, reject) => {
 		const transaction = db.transaction([STORES.SETTINGS], 'readwrite');
@@ -189,7 +189,7 @@ export async function saveSetting(key: string, value: unknown): Promise<void> {
 /**
  * Get a setting from IndexedDB
  */
-export async function getSetting<T>(key: string): Promise<T | undefined> {
+async function _getSetting<T>(key: string): Promise<T | undefined> {
 	const db = await getDB();
 	return new Promise((resolve, reject) => {
 		const transaction = db.transaction([STORES.SETTINGS], 'readonly');

@@ -40,6 +40,7 @@ export function Sidebar() {
 								Work Items
 							</h2>
 							<button
+								type="button"
 								onClick={handleClearAll}
 								className="flex items-center gap-1.5 rounded px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors"
 								title="Clear all tasks"

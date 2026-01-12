@@ -17,7 +17,7 @@ import {
 export const tasks = signal<Task[]>([]);
 
 // Signal for loading state
-export const isLoading = signal<boolean>(false);
+const isLoading = signal<boolean>(false);
 
 // Computed signal for tasks sorted by start date
 export const sortedTasks = computed(() => {
@@ -27,7 +27,7 @@ export const sortedTasks = computed(() => {
 });
 
 // Computed signal for tasks by status
-export const tasksByStatus = computed(() => {
+const _tasksByStatus = computed(() => {
 	const grouped: Record<string, Task[]> = {
 		Backlog: [],
 		'To Do': [],

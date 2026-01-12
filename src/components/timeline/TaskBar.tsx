@@ -2,7 +2,7 @@
  * TaskBar - Visual representation of a task on the timeline
  */
 
-import { useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 import { updateTask } from '../../store/taskStore';
 import { currentDate, openEditTaskForm, selectTask } from '../../store/uiStore';
 import type { Task } from '../../types';
@@ -148,102 +148,127 @@ export function TaskBar({ task, index }: TaskBarProps) {
 		setResizeOffsetDays(0);
 	};
 
-	const handleMouseMove = (e: MouseEvent) => {
-		const timeline = document.querySelector('.timeline-content');
-		if (!timeline) return;
+	const handleMouseMove = useCallback(
+		(e: MouseEvent) => {
+			const timeline = document.querySelector('.timeline-content');
+			if (!timeline) return;
 
-		if (isDragging) {
-			// Calculate horizontal offset (date change)
-			const timelineWidth = timeline.clientWidth;
-			const pixelsPerDay = timelineWidth / VIEW_DAYS;
-			const deltaX = e.clientX - dragStartX;
-			const dayOffset = Math.round(deltaX / pixelsPerDay);
+			if (isDragging) {
+				// Calculate horizontal offset (date change)
+				const timelineWidth = timeline.clientWidth;
+				const pixelsPerDay = timelineWidth / VIEW_DAYS;
+				const deltaX = e.clientX - dragStartX;
+				const dayOffset = Math.round(deltaX / pixelsPerDay);
 
-			// Calculate vertical offset (row change)
-			const deltaY = e.clientY - dragStartY;
-			const rowOffset = Math.round(deltaY / ROW_HEIGHT);
+				// Calculate vertical offset (row change)
+				const deltaY = e.clientY - dragStartY;
+				const rowOffset = Math.round(deltaY / ROW_HEIGHT);
 
-			setDragOffsetDays(dayOffset);
-			setDragOffsetRows(rowOffset);
-			e.preventDefault();
-		} else if (isResizing) {
-			const timelineWidth = timeline.clientWidth;
-			const pixelsPerDay = timelineWidth / VIEW_DAYS;
-			const deltaX = e.clientX - dragStartX;
-			const dayOffset = Math.round(deltaX / pixelsPerDay);
-			setResizeOffsetDays(dayOffset);
-			e.preventDefault();
-		}
-	};
-
-	const handleMouseUp = async (e: MouseEvent) => {
-		if (isDragging) {
-			setIsDragging(false);
-
-			if (dragOffsetDays !== 0) {
-				// Update task dates - move entire task
-				const newStartDate = addDays(task.startDate, dragOffsetDays);
-				const newEndDate = addDays(task.endDate, dragOffsetDays);
-
-				try {
-					await updateTask({
-						...task,
-						startDate: newStartDate,
-						endDate: newEndDate,
-						updatedAt: new Date(),
-					});
-					console.log(`Task moved by ${dragOffsetDays} days`);
-				} catch (error) {
-					console.error('Failed to update task position:', error);
-				}
+				setDragOffsetDays(dayOffset);
+				setDragOffsetRows(rowOffset);
+				e.preventDefault();
+			} else if (isResizing) {
+				const timelineWidth = timeline.clientWidth;
+				const pixelsPerDay = timelineWidth / VIEW_DAYS;
+				const deltaX = e.clientX - dragStartX;
+				const dayOffset = Math.round(deltaX / pixelsPerDay);
+				setResizeOffsetDays(dayOffset);
+				e.preventDefault();
 			}
+		},
+		[isDragging, isResizing, dragStartX, dragStartY]
+	);
 
-			setDragOffsetDays(0);
-			setDragOffsetRows(0);
-			e.preventDefault();
-		} else if (isResizing) {
-			const edge = isResizing;
-			setIsResizing(null);
+	const handleMouseUp = useCallback(
+		async (e: MouseEvent) => {
+			if (isDragging) {
+				setIsDragging(false);
 
-			if (resizeOffsetDays !== 0) {
-				let newStartDate = task.startDate;
-				let newEndDate = task.endDate;
+				if (dragOffsetDays !== 0) {
+					// Update task dates - move entire task
+					const newStartDate = addDays(task.startDate, dragOffsetDays);
+					const newEndDate = addDays(task.endDate, dragOffsetDays);
 
-				if (edge === 'start') {
-					// Resize from start - change start date only
-					newStartDate = addDays(task.startDate, resizeOffsetDays);
-					// Ensure start is before end
-					if (newStartDate >= task.endDate) {
-						newStartDate = addDays(task.endDate, -1);
-					}
-				} else if (edge === 'end') {
-					// Resize from end - change end date only
-					newEndDate = addDays(task.endDate, resizeOffsetDays);
-					// Ensure end is after start
-					if (newEndDate <= task.startDate) {
-						newEndDate = addDays(task.startDate, 1);
+					console.log(`📅 Updating task dates:`, {
+						taskId: task.id,
+						taskTitle: task.title,
+						oldStart: formatDate(task.startDate, 'MMM DD, YYYY'),
+						oldEnd: formatDate(task.endDate, 'MMM DD, YYYY'),
+						newStart: formatDate(newStartDate, 'MMM DD, YYYY'),
+						newEnd: formatDate(newEndDate, 'MMM DD, YYYY'),
+						daysOffset: dragOffsetDays,
+					});
+
+					try {
+						await updateTask({
+							...task,
+							startDate: newStartDate,
+							endDate: newEndDate,
+							updatedAt: new Date(),
+						});
+						console.log(`✅ Task dates updated successfully in database`);
+					} catch (error) {
+						console.error('❌ Failed to update task position:', error);
 					}
 				}
 
-				try {
-					await updateTask({
-						...task,
-						startDate: newStartDate,
-						endDate: newEndDate,
-						updatedAt: new Date(),
-					});
-					console.log(
-						`Task resized: ${edge} edge moved by ${resizeOffsetDays} days`
-					);
-				} catch (error) {
-					console.error('Failed to resize task:', error);
-				}
-			}
+				setDragOffsetDays(0);
+				setDragOffsetRows(0);
+				e.preventDefault();
+			} else if (isResizing) {
+				const edge = isResizing;
+				setIsResizing(null);
 
-			setResizeOffsetDays(0);
-			e.preventDefault();
-		}
-	};
+				if (resizeOffsetDays !== 0) {
+					let newStartDate = task.startDate;
+					let newEndDate = task.endDate;
+
+					if (edge === 'start') {
+						// Resize from start - change start date only
+						newStartDate = addDays(task.startDate, resizeOffsetDays);
+						// Ensure start is before end
+						if (newStartDate >= task.endDate) {
+							newStartDate = addDays(task.endDate, -1);
+						}
+					} else if (edge === 'end') {
+						// Resize from end - change end date only
+						newEndDate = addDays(task.endDate, resizeOffsetDays);
+						// Ensure end is after start
+						if (newEndDate <= task.startDate) {
+							newEndDate = addDays(task.startDate, 1);
+						}
+					}
+
+					console.log(`📅 Resizing task:`, {
+						taskId: task.id,
+						taskTitle: task.title,
+						edge: edge,
+						oldStart: formatDate(task.startDate, 'MMM DD, YYYY'),
+						oldEnd: formatDate(task.endDate, 'MMM DD, YYYY'),
+						newStart: formatDate(newStartDate, 'MMM DD, YYYY'),
+						newEnd: formatDate(newEndDate, 'MMM DD, YYYY'),
+						daysOffset: resizeOffsetDays,
+					});
+
+					try {
+						await updateTask({
+							...task,
+							startDate: newStartDate,
+							endDate: newEndDate,
+							updatedAt: new Date(),
+						});
+						console.log(`✅ Task resized successfully in database`);
+					} catch (error) {
+						console.error('❌ Failed to resize task:', error);
+					}
+				}
+
+				setResizeOffsetDays(0);
+				e.preventDefault();
+			}
+		},
+		[isDragging, isResizing, dragOffsetDays, resizeOffsetDays, task]
+	);
 
 	// Add global mouse event listeners when dragging or resizing
 	useEffect(() => {
@@ -260,16 +285,7 @@ export function TaskBar({ task, index }: TaskBarProps) {
 			document.removeEventListener('mousemove', handleMove);
 			document.removeEventListener('mouseup', handleUp);
 		};
-	}, [
-		isDragging,
-		isResizing,
-		dragStartX,
-		dragStartY,
-		task,
-		dragOffsetDays,
-		dragOffsetRows,
-		resizeOffsetDays,
-	]);
+	}, [isDragging, isResizing, handleMouseMove, handleMouseUp]);
 
 	return (
 		<div
