@@ -16,6 +16,7 @@ import {
 import type { ViewMode } from '../../types';
 import { cn } from '../../utils/cn';
 import { formatDate } from '../../utils/dateUtils';
+import { ImportExportMenu } from '../common/ImportExportMenu';
 
 export function Header() {
 	const views: ViewMode[] = ['Daily', 'Weekly', 'Monthly', 'Timeline'];
@@ -89,6 +90,9 @@ export function Header() {
 							</button>
 						))}
 					</div>
+
+					{/* Import/Export menu */}
+					<ImportExportMenu />
 
 					{/* New task button */}
 					<button

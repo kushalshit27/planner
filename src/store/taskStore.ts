@@ -117,3 +117,71 @@ export async function clearAllTasks(): Promise<void> {
 export function getTaskById(id: string): Task | undefined {
 	return tasks.value.find((task) => task.id === id);
 }
+
+/**
+ * Import tasks from array (replaces existing tasks)
+ */
+export async function importTasks(
+	importedTasks: Task[],
+	merge = false
+): Promise<void> {
+	console.log(`importTasks called: merge=${merge}, count=${importedTasks.length}`);
+	
+	try {
+		if (!merge) {
+			// Replace mode: clear existing tasks first
+			console.log('Replace mode: clearing all tasks');
+			await dbClearAllTasks();
+
+			// Add all imported tasks
+			for (const task of importedTasks) {
+				// Ensure updatedAt is set to now for imported tasks
+				const taskToImport = {
+					...task,
+					updatedAt: new Date(),
+				};
+				await dbCreateTask(taskToImport);
+			}
+			console.log(`Replace mode: imported ${importedTasks.length} tasks`);
+		} else {
+			// Merge mode: update existing tasks or create new ones
+			const existingTasks = tasks.value;
+			const existingTaskMap = new Map(existingTasks.map((t) => [t.id, t]));
+			console.log(`Merge mode: ${existingTaskMap.size} existing tasks`);
+
+			let updated = 0;
+			let created = 0;
+
+			for (const importedTask of importedTasks) {
+				// Update the updatedAt timestamp
+				const taskToImport = {
+					...importedTask,
+					updatedAt: new Date(),
+				};
+
+				if (existingTaskMap.has(importedTask.id)) {
+					// Task exists, update it
+					console.log(`Updating existing task: ${importedTask.id}`);
+					await dbUpdateTask(taskToImport);
+					updated++;
+				} else {
+					// New task, create it
+					console.log(`Creating new task: ${importedTask.id}`);
+					await dbCreateTask(taskToImport);
+					created++;
+				}
+			}
+			
+			console.log(`Merge mode: updated ${updated}, created ${created} tasks`);
+		}
+
+		// Reload all tasks from DB to sync with UI
+		console.log('Reloading tasks from DB');
+		await loadTasks();
+		console.log(`Import complete: ${tasks.value.length} total tasks in store`);
+	} catch (error) {
+		console.error('Failed to import tasks:', error);
+		throw error;
+	}
+}
+
