@@ -1,6 +1,6 @@
-# Planner
+# MyPlannerView
 
-Planner is a lightweight task management web application built with Preact, Vite, and Tailwind CSS. It features a beautiful weekly for visualizing task timelines.
+MyPlannerView is a lightweight task management web application built with Preact, Vite, and Tailwind CSS. It features a beautiful weekly for visualizing task timelines.
 
 ## Features
 
