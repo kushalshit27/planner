@@ -1,6 +1,4 @@
 /**
- * GanttChart - Main timeline/Gantt chart component
- * Inspired by frappe-gantt structure
  */
 
 import { sortedTasks } from '../../store/taskStore';

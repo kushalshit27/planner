@@ -10,6 +10,6 @@ echo "Running Biome on staged files..."
 bunx biome check --write --staged --no-errors-on-unmatched
 
 
-bunx commitlint --edit $1
+#bunx commitlint --edit $1
 
 # Note: Commit message validation happens in commit-msg hook
