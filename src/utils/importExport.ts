@@ -76,7 +76,7 @@ export function importTasks(
 		try {
 			const content = e.target?.result as string;
 			console.log('Parsing import file:', file.name);
-			
+
 			const data = JSON.parse(content) as ExportData;
 
 			// Validate data structure
@@ -98,9 +98,12 @@ export function importTasks(
 					callback([], `Invalid task data at position ${index + 1}.`);
 					return;
 				}
-				
+
 				// Validate dates are valid Date objects
-				if (Number.isNaN(task.startDate.getTime()) || Number.isNaN(task.endDate.getTime())) {
+				if (
+					Number.isNaN(task.startDate.getTime()) ||
+					Number.isNaN(task.endDate.getTime())
+				) {
 					console.error(`Invalid dates in task ${task.id}:`, task);
 					callback([], `Invalid date format in task "${task.title}".`);
 					return;

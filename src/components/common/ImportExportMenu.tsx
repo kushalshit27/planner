@@ -2,11 +2,17 @@
  * ImportExportMenu - Dropdown for import/export operations
  */
 
-import { Download, Upload, FileJson } from 'lucide-react';
+import { Download, FileJson, Upload } from 'lucide-react';
 import { useRef, useState } from 'preact/hooks';
-import { tasks, importTasks as importTasksToStore } from '../../store/taskStore';
+import {
+	importTasks as importTasksToStore,
+	tasks,
+} from '../../store/taskStore';
 import { cn } from '../../utils/cn';
-import { exportTasks, importTasks as parseImportFile } from '../../utils/importExport';
+import {
+	exportTasks,
+	importTasks as parseImportFile,
+} from '../../utils/importExport';
 
 interface ImportExportMenuProps {
 	className?: string;
@@ -58,10 +64,12 @@ export function ImportExportMenu({ className }: ImportExportMenuProps) {
 
 			try {
 				const merge = importMode === 'merge';
-				console.log(`Starting import: mode=${merge ? 'merge' : 'replace'}, count=${importedTasks.length}`);
-				
+				console.log(
+					`Starting import: mode=${merge ? 'merge' : 'replace'}, count=${importedTasks.length}`
+				);
+
 				await importTasksToStore(importedTasks, merge);
-				
+
 				const successMsg = merge
 					? `Merged ${importedTasks.length} tasks successfully`
 					: `Imported ${importedTasks.length} tasks successfully`;

@@ -125,8 +125,10 @@ export async function importTasks(
 	importedTasks: Task[],
 	merge = false
 ): Promise<void> {
-	console.log(`importTasks called: merge=${merge}, count=${importedTasks.length}`);
-	
+	console.log(
+		`importTasks called: merge=${merge}, count=${importedTasks.length}`
+	);
+
 	try {
 		if (!merge) {
 			// Replace mode: clear existing tasks first
@@ -171,7 +173,7 @@ export async function importTasks(
 					created++;
 				}
 			}
-			
+
 			console.log(`Merge mode: updated ${updated}, created ${created} tasks`);
 		}
 
@@ -184,4 +186,3 @@ export async function importTasks(
 		throw error;
 	}
 }
-
