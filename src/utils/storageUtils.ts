@@ -114,6 +114,21 @@ export async function deleteTask(id: string): Promise<void> {
 }
 
 /**
+ * Clear all tasks from IndexedDB
+ */
+export async function clearAllTasks(): Promise<void> {
+	const db = await getDB();
+	return new Promise((resolve, reject) => {
+		const transaction = db.transaction([STORES.TASKS], 'readwrite');
+		const store = transaction.objectStore(STORES.TASKS);
+		const request = store.clear();
+
+		request.onsuccess = () => resolve();
+		request.onerror = () => reject(request.error);
+	});
+}
+
+/**
  * Get tasks by date range
  */
 export async function getTasksByDateRange(

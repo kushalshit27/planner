@@ -6,6 +6,7 @@
 import { computed, signal } from '@preact/signals';
 import type { Task } from '../types';
 import {
+	clearAllTasks as dbClearAllTasks,
 	createTask as dbCreateTask,
 	deleteTask as dbDeleteTask,
 	updateTask as dbUpdateTask,
@@ -93,6 +94,19 @@ export async function deleteTask(id: string): Promise<void> {
 		tasks.value = tasks.value.filter((task) => task.id !== id);
 	} catch (error) {
 		console.error('Failed to delete task:', error);
+		throw error;
+	}
+}
+
+/**
+ * Clear all tasks
+ */
+export async function clearAllTasks(): Promise<void> {
+	try {
+		await dbClearAllTasks();
+		tasks.value = [];
+	} catch (error) {
+		console.error('Failed to clear all tasks:', error);
 		throw error;
 	}
 }

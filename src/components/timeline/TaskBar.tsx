@@ -2,7 +2,7 @@
  * TaskBar - Visual representation of a task on the timeline
  */
 
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { updateTask } from '../../store/taskStore';
 import { currentDate, openEditTaskForm, selectTask } from '../../store/uiStore';
 import type { Task } from '../../types';
@@ -38,7 +38,9 @@ export function TaskBar({ task, index }: TaskBarProps) {
 	const [isDragging, setIsDragging] = useState(false);
 	const [isResizing, setIsResizing] = useState<'start' | 'end' | null>(null);
 	const [dragStartX, setDragStartX] = useState(0);
+	const [dragStartY, setDragStartY] = useState(0);
 	const [dragOffsetDays, setDragOffsetDays] = useState(0);
+	const [dragOffsetRows, setDragOffsetRows] = useState(0);
 	const [resizeOffsetDays, setResizeOffsetDays] = useState(0);
 
 	const weekStart = getWeekStart(currentDate.value);
@@ -111,7 +113,12 @@ export function TaskBar({ task, index }: TaskBarProps) {
 	}
 
 	const colorClass = colorClasses[task.color] || colorClasses.blue;
-	const topPosition = index * ROW_HEIGHT + (ROW_HEIGHT - TASK_BAR_HEIGHT) / 2;
+	let topPosition = index * ROW_HEIGHT + (ROW_HEIGHT - TASK_BAR_HEIGHT) / 2;
+
+	// Adjust top position during drag
+	if (isDragging) {
+		topPosition += dragOffsetRows * ROW_HEIGHT;
+	}
 
 	const handleClick = () => {
 		if (!isDragging && !isResizing) {
@@ -125,7 +132,9 @@ export function TaskBar({ task, index }: TaskBarProps) {
 			// Left click only
 			setIsDragging(true);
 			setDragStartX(e.clientX);
+			setDragStartY(e.clientY);
 			setDragOffsetDays(0);
+			setDragOffsetRows(0);
 			e.preventDefault();
 			e.stopPropagation();
 		}
@@ -143,15 +152,25 @@ export function TaskBar({ task, index }: TaskBarProps) {
 		const timeline = document.querySelector('.timeline-content');
 		if (!timeline) return;
 
-		const timelineWidth = timeline.clientWidth;
-		const pixelsPerDay = timelineWidth / VIEW_DAYS;
-		const deltaX = e.clientX - dragStartX;
-		const dayOffset = Math.round(deltaX / pixelsPerDay);
-
 		if (isDragging) {
+			// Calculate horizontal offset (date change)
+			const timelineWidth = timeline.clientWidth;
+			const pixelsPerDay = timelineWidth / VIEW_DAYS;
+			const deltaX = e.clientX - dragStartX;
+			const dayOffset = Math.round(deltaX / pixelsPerDay);
+
+			// Calculate vertical offset (row change)
+			const deltaY = e.clientY - dragStartY;
+			const rowOffset = Math.round(deltaY / ROW_HEIGHT);
+
 			setDragOffsetDays(dayOffset);
+			setDragOffsetRows(rowOffset);
 			e.preventDefault();
 		} else if (isResizing) {
+			const timelineWidth = timeline.clientWidth;
+			const pixelsPerDay = timelineWidth / VIEW_DAYS;
+			const deltaX = e.clientX - dragStartX;
+			const dayOffset = Math.round(deltaX / pixelsPerDay);
 			setResizeOffsetDays(dayOffset);
 			e.preventDefault();
 		}
@@ -180,6 +199,7 @@ export function TaskBar({ task, index }: TaskBarProps) {
 			}
 
 			setDragOffsetDays(0);
+			setDragOffsetRows(0);
 			e.preventDefault();
 		} else if (isResizing) {
 			const edge = isResizing;
@@ -226,16 +246,30 @@ export function TaskBar({ task, index }: TaskBarProps) {
 	};
 
 	// Add global mouse event listeners when dragging or resizing
-	if (isDragging || isResizing) {
-		document.addEventListener('mousemove', handleMouseMove as any);
-		document.addEventListener('mouseup', handleMouseUp as any);
+	useEffect(() => {
+		if (!isDragging && !isResizing) return;
 
-		// Cleanup
-		setTimeout(() => {
-			document.removeEventListener('mousemove', handleMouseMove as any);
-			document.removeEventListener('mouseup', handleMouseUp as any);
-		}, 0);
-	}
+		const handleMove = handleMouseMove as any;
+		const handleUp = handleMouseUp as any;
+
+		document.addEventListener('mousemove', handleMove);
+		document.addEventListener('mouseup', handleUp);
+
+		// Cleanup on unmount or when drag/resize stops
+		return () => {
+			document.removeEventListener('mousemove', handleMove);
+			document.removeEventListener('mouseup', handleUp);
+		};
+	}, [
+		isDragging,
+		isResizing,
+		dragStartX,
+		dragStartY,
+		task,
+		dragOffsetDays,
+		dragOffsetRows,
+		resizeOffsetDays,
+	]);
 
 	return (
 		<div

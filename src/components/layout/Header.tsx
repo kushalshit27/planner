@@ -32,7 +32,7 @@ export function Header() {
 					>
 						<Menu className="h-5 w-5 text-gray-600" />
 					</button>
-					<h1 className="text-xl font-semibold text-gray-900">Planner</h1>
+					<h1 className="text-xl font-semibold text-gray-900">MyPlannerView</h1>
 				</div>
 
 				{/* Center section - Date navigation */}
