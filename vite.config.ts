@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [preact()],
+	base: '/planner/',
 	server: {
 		port: 5173,
 	},
