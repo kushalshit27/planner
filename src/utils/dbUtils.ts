@@ -1,61 +1,83 @@
+/**
+ * IndexedDB initialization and connection management
+ * Schema v1: tasks, dependencies, settings object stores
+ */
+
 const DB_NAME = 'plannerDB';
 const DB_VERSION = 1;
 
-export type StoreNames = 'tasks' | 'dependencies' | 'settings';
+export const STORES = {
+	TASKS: 'tasks',
+	DEPENDENCIES: 'dependencies',
+	SETTINGS: 'settings',
+} as const;
 
-function openDatabase(): Promise<IDBDatabase> {
+let dbInstance: IDBDatabase | null = null;
+
+/**
+ * Initialize and open the IndexedDB connection
+ */
+export async function initDB(): Promise<IDBDatabase> {
+	if (dbInstance) {
+		return dbInstance;
+	}
+
 	return new Promise((resolve, reject) => {
 		const request = indexedDB.open(DB_NAME, DB_VERSION);
 
-		request.onupgradeneeded = () => {
-			const db = request.result;
-			if (!db.objectStoreNames.contains('tasks')) {
-				const store = db.createObjectStore('tasks', { keyPath: 'id' });
-				store.createIndex('startDate', 'startDate');
-				store.createIndex('endDate', 'endDate');
-				store.createIndex('status', 'status');
-				store.createIndex('priority', 'priority');
-				store.createIndex('category', 'category');
-				store.createIndex('createdAt', 'createdAt');
+		request.onerror = () => {
+			reject(new Error(`Failed to open database: ${request.error?.message}`));
+		};
+
+		request.onsuccess = () => {
+			dbInstance = request.result;
+			resolve(dbInstance);
+		};
+
+		request.onupgradeneeded = (event) => {
+			const db = (event.target as IDBOpenDBRequest).result;
+
+			// Create tasks object store
+			if (!db.objectStoreNames.contains(STORES.TASKS)) {
+				const taskStore = db.createObjectStore(STORES.TASKS, { keyPath: 'id' });
+				taskStore.createIndex('startDate', 'startDate', { unique: false });
+				taskStore.createIndex('endDate', 'endDate', { unique: false });
+				taskStore.createIndex('status', 'status', { unique: false });
+				taskStore.createIndex('priority', 'priority', { unique: false });
 			}
-			if (!db.objectStoreNames.contains('dependencies')) {
-				const depStore = db.createObjectStore('dependencies', {
+
+			// Create dependencies object store
+			if (!db.objectStoreNames.contains(STORES.DEPENDENCIES)) {
+				db.createObjectStore(STORES.DEPENDENCIES, {
 					keyPath: 'id',
 					autoIncrement: true,
 				});
-				depStore.createIndex('sourceTaskId', 'sourceTaskId');
-				depStore.createIndex('targetTaskId', 'targetTaskId');
 			}
-			if (!db.objectStoreNames.contains('settings')) {
-				db.createObjectStore('settings', { keyPath: 'key' });
+
+			// Create settings object store
+			if (!db.objectStoreNames.contains(STORES.SETTINGS)) {
+				db.createObjectStore(STORES.SETTINGS, { keyPath: 'key' });
 			}
 		};
-
-		request.onsuccess = () => resolve(request.result);
-		request.onerror = () => reject(request.error);
 	});
 }
 
-export async function runTx<T>(
-	storeName: StoreNames,
-	mode: IDBTransactionMode,
-	fn: (store: IDBObjectStore) => IDBRequest<T> | T | Promise<T>
-): Promise<T> {
-	const db = await openDatabase();
-	return new Promise<T>((resolve, reject) => {
-		const tx = db.transaction(storeName, mode);
-		const store = tx.objectStore(storeName);
-		const result = fn(store);
+/**
+ * Get the current database instance
+ */
+export async function getDB(): Promise<IDBDatabase> {
+	if (!dbInstance) {
+		return initDB();
+	}
+	return dbInstance;
+}
 
-		if (result instanceof IDBRequest) {
-			result.onsuccess = () => resolve(result.result as T);
-			result.onerror = () => reject(result.error);
-		} else if (result instanceof Promise) {
-			result.then(resolve).catch(reject);
-			tx.onerror = () => reject(tx.error);
-		} else {
-			tx.oncomplete = () => resolve(result);
-			tx.onerror = () => reject(tx.error);
-		}
-	});
+/**
+ * Close the database connection
+ */
+export function closeDB(): void {
+	if (dbInstance) {
+		dbInstance.close();
+		dbInstance = null;
+	}
 }

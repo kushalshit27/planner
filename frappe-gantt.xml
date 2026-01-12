@@ -1,0 +1,1761 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+The content has been processed where content has been compressed (code blocks are separated by ⋮---- delimiter).
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.github/
+  workflows/
+    publish.yml
+  gantt-logo.jpg
+  hero-image.png
+builder/
+  demo.css
+  demo.js
+src/
+  styles/
+    dark.css
+    gantt.css
+    light.css
+  arrow.js
+  bar.js
+  date_utils.js
+  defaults.js
+  index.js
+  popup.js
+  svg_utils.js
+tests/
+  date_utils.test.js
+.gitignore
+.prettierignore
+.prettierrc.json
+eslint.config.mjs
+index.html
+license.txt
+package.json
+postcss.config.cjs
+README.md
+vite.config.js
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".github/workflows/publish.yml">
+name: Publish on NPM
+on:
+    push:
+        branches: [release]
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: pnpm/action-setup@v4
+              with:
+                  version: 9
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: '18'
+                  cache: 'pnpm'
+            - run: pnpm install
+            - run: pnpm prettier-check
+            - run: pnpm build
+            - uses: JS-DevTools/npm-publish@v1
+              with:
+                  token: ${{ secrets.NPM_TOKEN }}
+</file>
+
+<file path="builder/demo.css">
+.switch {
+⋮----
+.switch input {
+⋮----
+.slider {
+⋮----
+.slider:before {
+⋮----
+input:checked + .slider {
+⋮----
+input:focus + .slider {
+⋮----
+input:checked + .slider:before {
+⋮----
+.slider.round {
+⋮----
+.slider.round:before {
+⋮----
+.viewmode-select {
+⋮----
+.selected {
+⋮----
+.button {
+⋮----
+.button:hover {
+⋮----
+.button div {
+⋮----
+.input-switch {
+⋮----
+.input-switch label {
+⋮----
+.code {
+</file>
+
+<file path="builder/demo.js">
+popup: (ctx) =>
+⋮----
+title.onclick = () =>
+⋮----
+el.onchange = (e) =>
+</file>
+
+<file path="src/styles/dark.css">
+:root {
+⋮----
+.dark > .gantt-container .gantt {
+⋮----
+& .grid-row {
+⋮----
+& .row-line {
+⋮----
+& .tick {
+⋮----
+& .arrow {
+⋮----
+& .bar {
+⋮----
+& .bar-progress {
+⋮----
+& .bar-invalid {
+⋮----
+& ~ .bar-label {
+⋮----
+& .bar-label.big {
+⋮----
+& .bar-wrapper {
+⋮----
+&:hover {
+⋮----
+.bar {
+⋮----
+&.active {
+⋮----
+.dark > .gantt-container {
+⋮----
+& .grid-header {
+⋮----
+& .popup-wrapper {
+⋮----
+& .title {
+</file>
+
+<file path="src/styles/gantt.css">
+.gantt-container {
+⋮----
+& .popup-wrapper {
+⋮----
+& .title {
+⋮----
+& .subtitle {
+⋮----
+& .details {
+⋮----
+& .actions {
+⋮----
+& .action-btn {
+⋮----
+&:hover {
+⋮----
+&:first-child {
+⋮----
+&:last-child {
+⋮----
+& .grid-header {
+⋮----
+& .lower-text,
+⋮----
+& .upper-header {
+⋮----
+& .lower-header {
+⋮----
+& .lower-text {
+⋮----
+& .upper-text {
+⋮----
+& .current-upper {
+⋮----
+& .side-header {
+⋮----
+& .side-header * {
+⋮----
+& .side-header select {
+& .side-header select:focus {
+⋮----
+& .date-range-highlight {
+⋮----
+& .current-highlight {
+⋮----
+& .current-ball-highlight {
+⋮----
+& .current-date-highlight {
+⋮----
+& .holiday-label {
+⋮----
+&.show {
+⋮----
+& .extras {
+⋮----
+& .adjust {
+⋮----
+.hide {
+⋮----
+.gantt {
+⋮----
+& .grid-background {
+⋮----
+& .grid-row {
+⋮----
+& .row-line {
+⋮----
+& .tick {
+⋮----
+&.thick {
+⋮----
+& .arrow {
+⋮----
+& .bar-wrapper .bar {
+⋮----
+& .bar-progress {
+⋮----
+& .bar-expected-progress {
+⋮----
+& .bar-invalid {
+⋮----
+& ~ .bar-label {
+⋮----
+& .bar-label {
+⋮----
+&.big {
+⋮----
+& .handle {
+⋮----
+&.active,
+⋮----
+& .handle.progress {
+⋮----
+& .bar-wrapper {
+⋮----
+& .bar {
+⋮----
+.bar {
+⋮----
+.date-range-highlight {
+</file>
+
+<file path="src/styles/light.css">
+:root {
+</file>
+
+<file path="src/arrow.js">
+export default class Arrow
+⋮----
+calculate_path()
+⋮----
+const condition = ()
+⋮----
+draw()
+⋮----
+update()
+</file>
+
+<file path="src/bar.js">
+export default class Bar
+⋮----
+refresh()
+⋮----
+set_defaults(gantt, task)
+⋮----
+prepare_wrappers()
+⋮----
+prepare_values()
+⋮----
+prepare_helpers()
+⋮----
+prepare_expected_progress_values()
+⋮----
+draw()
+⋮----
+draw_bar()
+⋮----
+draw_expected_progress_bar()
+⋮----
+draw_progress_bar()
+⋮----
+calculate_progress_width()
+⋮----
+draw_label()
+⋮----
+// labels get BBox in the next tick
+⋮----
+draw_thumbnail()
+⋮----
+draw_resize_handles()
+⋮----
+bind()
+⋮----
+setup_click_event()
+⋮----
+// just finished a move action, wait for a few seconds
+⋮----
+//action on double tap goes below
+⋮----
+// just finished a move action, wait for a few seconds
+⋮----
+update_bar_position(
+⋮----
+update_label_position_on_horizontal_scroll(
+⋮----
+date_changed()
+⋮----
+progress_changed()
+⋮----
+set_action_completed()
+⋮----
+compute_start_end_date()
+⋮----
+compute_progress()
+⋮----
+compute_expected_progress()
+⋮----
+compute_x()
+⋮----
+/* Since the column width is based on 30,
+        we count the month-difference, multiply it by 30 for a "pseudo-month"
+        and then add the days in the month, making sure the number does not exceed 29
+        so it is within the column */
+⋮----
+// if (this.gantt.view_is('Month')) {
+//     const diffDaysBasedOn30DayMonths =
+//         date_utils.diff(task_start, gantt_start, 'month') * 30;
+//     const dayInMonth = Math.min(
+//         29,
+//         date_utils.format(
+//             task_start,
+//             'DD',
+//             this.gantt.options.language,
+//         ),
+//     );
+//     const diff = diffDaysBasedOn30DayMonths + dayInMonth;
+⋮----
+//     x = (diff * column_width) / 30;
+// }
+⋮----
+compute_y()
+⋮----
+compute_duration()
+⋮----
+update_attr(element, attr, value)
+⋮----
+update_expected_progressbar_position()
+⋮----
+update_progressbar_position()
+⋮----
+update_label_position()
+⋮----
+update_handle_position()
+⋮----
+update_arrow_position()
+</file>
+
+<file path="src/date_utils.js">
+parse_duration(duration)
+parse(date, date_separator = '-', time_separator = /[.:]/)
+⋮----
+// month is 0 indexed
+⋮----
+to_string(date, with_time = false)
+⋮----
+// add 1 for month
+⋮----
+format(date, date_format = 'YYYY-MM-DD HH:mm:ss.SSS', lang = 'en')
+⋮----
+.sort((a, b) => b.length - a.length) // big string first
+⋮----
+diff(date_a, date_b, scale = 'day')
+⋮----
+// Calculate months across years
+⋮----
+// calculate extra
+⋮----
+/* If monthDiff is negative, date_b is in an earlier month than
+        date_a and thus subtracted from the year difference in months */
+⋮----
+/* If date_a's (e.g. march 1st) day of the month is smaller than date_b (e.g. february 28th),
+        adjust the month difference */
+⋮----
+// Calculate years based on actual months
+⋮----
+today()
+⋮----
+now()
+⋮----
+add(date, qty, scale)
+⋮----
+start_of(date, scale)
+⋮----
+function should_reset(_scale)
+⋮----
+clone(date)
+⋮----
+get_date_values(date)
+⋮----
+convert_scales(period, to_scale)
+⋮----
+get_days_in_month(date)
+⋮----
+// Feb
+⋮----
+get_days_in_year(date)
+⋮----
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
+function padStart(str, targetLength, padString)
+</file>
+
+<file path="src/defaults.js">
+function getDecade(d)
+⋮----
+function formatWeek(d, ld, lang)
+⋮----
+upper_text: (d, ld, lang)
+⋮----
+lower_text: (d, ld, lang)
+⋮----
+thick_line: (d)
+⋮----
+popup: (ctx) =>
+⋮----
+is_weekend: (d)
+</file>
+
+<file path="src/index.js">
+export default class Gantt
+⋮----
+setup_wrapper(element)
+⋮----
+// CSS Selector is passed
+⋮----
+// get the SVGElement
+⋮----
+// svg element
+⋮----
+// create it
+⋮----
+// wrapper element
+⋮----
+setup_options(options)
+⋮----
+// automatically set the view mode to the first option
+⋮----
+this.config.ignored_function = (d)
+⋮----
+update_options(options)
+⋮----
+setup_tasks(tasks)
+⋮----
+// make task invalid if duration too large
+⋮----
+// cache index
+⋮----
+// if hours is not set, assume the last day is full day
+// e.g: 2018-09-09 becomes 2018-09-09 23:59:59
+⋮----
+// dependencies
+⋮----
+// uids
+⋮----
+setup_dependencies()
+⋮----
+refresh(tasks)
+⋮----
+update_task(id, new_details)
+⋮----
+change_view_mode(mode = this.options.view_mode, maintain_pos = false)
+⋮----
+update_view_scale(mode)
+⋮----
+setup_dates(refresh = false)
+⋮----
+setup_gantt_dates(refresh)
+⋮----
+setup_date_values()
+⋮----
+bind_events()
+⋮----
+render()
+⋮----
+setup_layers()
+⋮----
+// make group layers
+⋮----
+make_grid()
+⋮----
+make_grid_extras()
+⋮----
+make_grid_background()
+⋮----
+make_grid_rows()
+⋮----
+make_grid_header()
+⋮----
+make_side_header()
+⋮----
+// Create view mode change select
+⋮----
+// Create today button
+⋮----
+make_grid_ticks()
+⋮----
+highlight_holidays()
+⋮----
+check_highlight = (d)
+⋮----
+/**
+     * Compute the horizontal x-axis distance and associated date for the current date and view.
+     *
+     * @returns Object containing the x-axis distance and date of the current date, or null if the current date is out of the gantt range.
+     */
+highlight_current()
+⋮----
+make_grid_highlights()
+⋮----
+create_el(
+⋮----
+make_dates()
+⋮----
+get_dates_to_draw()
+⋮----
+get_date_info(date, last_date_info)
+⋮----
+this.config.view_mode.upper_text = ()
+⋮----
+this.config.view_mode.upper_text = (date)
+⋮----
+this.config.view_mode.lower_text = ()
+⋮----
+this.config.view_mode.lower_text = (date)
+⋮----
+make_bars()
+⋮----
+make_arrows()
+⋮----
+this.bars[dependency._index], // from_task
+this.bars[task._index], // to_task
+⋮----
+.filter(Boolean); // filter falsy values
+⋮----
+map_arrows_on_bars()
+⋮----
+set_dimensions()
+⋮----
+set_scroll_position(date)
+⋮----
+// Weird bug where infinite padding results in one day offset in scroll
+// Related to header-body displacement
+⋮----
+// Calculate current scroll position's upper text
+⋮----
+// Recalculate
+⋮----
+scroll_current()
+⋮----
+get_closest_date()
+⋮----
+// safety check to prevent infinite loop
+⋮----
+bind_grid_click()
+⋮----
+bind_holiday_labels()
+⋮----
+h.onmouseenter = (e) =>
+⋮----
+h.onmouseleave = (e) =>
+⋮----
+get_start_end_positions()
+⋮----
+bind_bar_events()
+⋮----
+let bars = []; // instanceof Bar
+⋮----
+const action_in_progress = ()
+⋮----
+this.$svg.onclick = (e) =>
+⋮----
+// Calculate current scroll position's upper text
+⋮----
+// Recalculate for smoother experience
+⋮----
+this.$adjust.onclick = () =>
+⋮----
+bind_bar_progress()
+⋮----
+get_all_dependent_tasks(task_id)
+⋮----
+get_snap_position(dx, ox)
+⋮----
+get_ignored_region(pos, drn = 1)
+⋮----
+unselect_all()
+⋮----
+view_is(modes)
+⋮----
+get_task(id)
+⋮----
+get_bar(id)
+⋮----
+show_popup(opts)
+⋮----
+hide_popup()
+⋮----
+trigger_event(event, args)
+⋮----
+/**
+     * Gets the oldest starting date from the list of tasks
+     *
+     * @returns Date
+     * @memberof Gantt
+     */
+get_oldest_starting_date()
+⋮----
+/**
+     * Clear all elements from the parent svg element
+     *
+     * @memberof Gantt
+     */
+clear()
+⋮----
+function generate_id(task)
+⋮----
+function sanitize(s)
+</file>
+
+<file path="src/popup.js">
+export default class Popup
+⋮----
+make()
+⋮----
+show(
+⋮----
+get_title: ()
+set_title: (title)
+get_subtitle: ()
+set_subtitle: (subtitle)
+get_details: ()
+set_details: (details)
+add_action: (html, func) =>
+⋮----
+action.onclick = (e)
+⋮----
+hide()
+</file>
+
+<file path="src/svg_utils.js">
+export function $(expr, con)
+⋮----
+export function createSVG(tag, attrs)
+⋮----
+export function animateSVG(svgElement, attr, from, to)
+⋮----
+// triggered 2nd time programmatically
+// trigger artificial click event
+⋮----
+function getAnimationElement(
+    svgElement,
+    attr,
+    from,
+    to,
+    dur = '0.4s',
+    begin = '0.1s',
+)
+⋮----
+begin: 'click + ' + begin, // artificial click
+⋮----
+function cubic_bezier(name)
+⋮----
+$.on = (element, event, selector, callback) =>
+⋮----
+$.off = (element, event, handler) =>
+⋮----
+$.bind = (element, event, callback) =>
+⋮----
+$.delegate = (element, event, selector, callback) =>
+⋮----
+$.closest = (selector, element) =>
+⋮----
+$.attr = (element, attr, value) =>
+</file>
+
+<file path="tests/date_utils.test.js">
+
+</file>
+
+<file path=".gitignore">
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Directory for instrumented libs generated by jscoverage/JSCover
+lib-cov
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+build/Release
+dist/*
+
+# Dependency directory
+# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
+node_modules
+.yarn
+
+.DS_Store
+
+gh-pages
+feedback*.md
+</file>
+
+<file path=".prettierignore">
+dist
+</file>
+
+<file path=".prettierrc.json">
+{
+    "tabWidth": 4,
+    "singleQuote": true
+}
+</file>
+
+<file path="eslint.config.mjs">
+
+</file>
+
+<file path="index.html">
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Simple Gantt</title>
+        <link rel="stylesheet" href="dist/frappe-gantt.css" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
+        <style>
+            .container {
+                width: 90%;
+                margin: 0 auto;
+            }
+
+            .chart {
+                border: 1px dotted black;
+                border-radius: 4px;
+                height: fit-content;
+            }
+
+            .chart.active {
+                filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, 0.6));
+                border: unset;
+            }
+
+            small {
+                font-size: 0.775em;
+            }
+        </style>
+        <script src="dist/frappe-gantt.umd.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="text-center pt-3 pb-2 font-serif">Frappe Gantt</h1>
+            <hr />
+            <div class="row my-5">
+                <div class="col-md-3 px-5 py-1">
+                    <h3 class="text-center">Set edit access</h3>
+                    <p>
+                        Easy make sure your employees change <em>only</em> what
+                        they need to.
+                    </p>
+                    <div class="form-check form-switch">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            role="switch"
+                            id="mutable-general"
+                            checked
+                        />
+                        <label class="form-check-label" for="mutable-general"
+                            >Editable</label
+                        >
+                    </div>
+                    <div class="form-check form-switch">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            role="switch"
+                            id="mutable-progress"
+                            checked
+                        />
+                        <label class="form-check-label" for="mutable-general"
+                            >Progress editable</label
+                        >
+                    </div>
+                    <div class="form-check form-switch">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            role="switch"
+                            id="mutable-dates"
+                            checked
+                        />
+                        <label class="form-check-label" for="mutable-general"
+                            >Dates editable</label
+                        >
+                    </div>
+                </div>
+
+                <div class="chart col-md-9" id="mutability"></div>
+            </div>
+            <div class="row my-5">
+                <div class="chart col-md-9" id="sideheader"></div>
+                <div class="col-md-3 px-5 py-1">
+                    <h3 class="text-center">Versatile Actions</h3>
+                    <p>
+                        Change the view mode, or scroll to today, or add
+                        anything you like <sup>β</sup>.
+                    </p>
+                    <div class="form-check form-switch">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            role="switch"
+                            id="toggle-today"
+                            checked
+                        />
+                        <label class="form-check-label" for="mutable-general"
+                            >Scroll to Today</label
+                        >
+                    </div>
+                    <div class="form-check form-switch">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            role="switch"
+                            id="toggle-view-mode"
+                            checked
+                        />
+                        <label class="form-check-label" for="mutable-general"
+                            >Change View Mode</label
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-5">
+                <div class="col-md-3 px-5 py-1">
+                    <h3 class="text-center">Mark Holidays</h3>
+                    <p>
+                        Be it public holidays, company milestones, or just
+                        weekends, you can see it all.
+                    </p>
+                    <div class="form-check form-switch">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            role="switch"
+                            id="toggle-weekends"
+                        />
+                        <label class="form-check-label" for="toggle-weekends"
+                            >Show weekends</label
+                        >
+                    </div>
+                    <div class="form-check form-switch">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            role="switch"
+                            id="custom-weekends"
+                        />
+                        <label class="form-check-label" for="custom-weekends"
+                            >Custom weekends</label
+                        >
+                    </div>
+                </div>
+                <div class="chart col-md-9" id="holidays"></div>
+            </div>
+
+            <div class="row my-5">
+                <div class="col-md-3 px-5 py-1">
+                    <h3 class="text-center">...or <em>ignore</em> them</h3>
+                    <p>
+                        Remove time periods from your Gantt - they're now
+                        completely ignored.
+                    </p>
+                    <div class="form-check form-switch">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            role="switch"
+                            id="ignore-weekends"
+                            checked
+                        />
+                        <label class="form-check-label" for="toggle-weekends"
+                            >Ignore weekends</label
+                        >
+                    </div>
+                </div>
+                <div class="chart col-md-9" id="ignore"></div>
+            </div>
+            <div class="row my-4">
+                <div class="col-md-9 chart" id="styling"></div>
+                <div class="col-md-3 px-4">
+                    <h3 class="text-center">Control the styles completely.</h3>
+                    <strong>Modify Grid</strong>
+                    <div class="input-group row">
+                        <label
+                            for="grid-height"
+                            class="form-label col-sm-5 col-form-label"
+                            ><small>Grid Height:</small></label
+                        >
+                        <div class="col-sm-7">
+                            <input
+                                id="grid-height"
+                                class="form-range align-items-end"
+                                type="range"
+                                min="150"
+                                max="600"
+                                value="300"
+                            />
+                        </div>
+                    </div>
+                    <div class="input-group row">
+                        <label
+                            for="padding"
+                            class="form-label col-sm-5 col-form-label"
+                            ><small>Padding:</small></label
+                        >
+                        <div class="col-sm-7">
+                            <input
+                                id="padding"
+                                class="form-range align-items-end"
+                                type="range"
+                                min="3"
+                                max="50"
+                                value="18"
+                            />
+                        </div>
+                    </div>
+                    <div class="input-group row">
+                        <label
+                            for="column-width"
+                            class="form-label col-sm-5 col-form-label"
+                            ><small>Column Width:</small></label
+                        >
+                        <div class="col-sm-7">
+                            <input
+                                id="column-width"
+                                class="form-range align-items-end"
+                                type="range"
+                                min="30"
+                                max="70"
+                                value="30"
+                            />
+                        </div>
+                    </div>
+                    <div class="pt-3">
+                        <strong>Modify Bar</strong>
+                    </div>
+                    <div class="input-group row">
+                        <label
+                            for="bar-height"
+                            class="form-label col-sm-5 col-form-label"
+                            ><small>Height:</small></label
+                        >
+                        <div class="col-sm-7">
+                            <input
+                                id="bar-height"
+                                class="form-range align-items-end"
+                                type="range"
+                                min="10"
+                                max="100"
+                                value="30"
+                            />
+                        </div>
+                    </div>
+                    <div class="input-group row">
+                        <label
+                            for="bar-radius"
+                            class="form-label col-sm-5 col-form-label"
+                            ><small>Radius:</small></label
+                        >
+                        <div class="col-sm-7">
+                            <input
+                                id="bar-radius"
+                                class="form-range align-items-end"
+                                type="range"
+                                min="1"
+                                max="50"
+                                value="3"
+                            />
+                        </div>
+                    </div>
+                    <div class="input-group row">
+                        <label
+                            for="arrow-curve"
+                            class="form-label col-sm-5 col-form-label"
+                            ><small>Arrow curving:</small></label
+                        >
+                        <div class="col-sm-7">
+                            <input
+                                id="arrow-curve"
+                                class="form-range align-items-end"
+                                type="range"
+                                min="1"
+                                max="50"
+                                value="3"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-4">
+                <div class="col-md-3">
+                    <h2>Frappe Gantt - <em>for you</em>.</h2>
+                    <p>
+                        Insane levels of customizability - change anything,
+                        everything.
+                    </p>
+                    <div class="input-group">
+                        <label class="input-group-text">Snap By: </label>
+                        <input
+                            class="form-control"
+                            id="snap-at-qty"
+                            type="number"
+                            value="1"
+                        />
+                        <select class="form-select" id="snap-at-scale">
+                            <option value="s">Second</option>
+                            <option value="min">Minute</option>
+                            <option value="h">Hour</option>
+                            <option value="d" selected>Day</option>
+                            <option value="m">Month</option>
+                            <option value="y">Year</option>
+                        </select>
+                    </div>
+                    <div class="form-check form-switch my-2">
+                        <label class="form-check-label" for="auto-move-label"
+                            >Toggle auto-moving label</label
+                        >
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            role="switch"
+                            id="auto-move-label"
+                        />
+                    </div>
+                </div>
+                <div class="col-md-9 chart" id="advanced"></div>
+            </div>
+        </div>
+        <script type="module">
+            const rawToday = new Date();
+            const today =
+                Date.UTC(
+                    rawToday.getFullYear(),
+                    rawToday.getMonth(),
+                    rawToday.getDate(),
+                ) +
+                new Date().getTimezoneOffset() * 60000;
+
+            function random(begin = 10, end = 90, multiple = 10) {
+                let k;
+                do {
+                    k = Math.floor(Math.random() * 100);
+                } while (k < begin || k > end || k % multiple !== 0);
+                return k;
+            }
+
+            const daysSince = (dx) => new Date(today + dx * 86400000);
+            let tasks = [
+                {
+                    start: daysSince(-2),
+                    end: daysSince(2),
+                    name: 'Redesign website',
+                    id: 'Task 0',
+                    progress: random(),
+                },
+                {
+                    start: daysSince(3),
+                    duration: '6d',
+                    name: 'Write new content',
+                    id: 'Task 1',
+                    progress: random(),
+                    important: true,
+                    dependencies: 'Task 0',
+                },
+                {
+                    start: daysSince(4),
+                    duration: '2d',
+                    name: 'Apply new styles',
+                    id: 'Task 2',
+                    progress: random(),
+                },
+                {
+                    start: daysSince(-4),
+                    end: daysSince(0),
+                    name: 'Review',
+                    id: 'Task 3',
+                    progress: random(),
+                },
+            ];
+
+            const tasksSpread = [
+                {
+                    start: daysSince(-30),
+                    end: daysSince(-10),
+                    name: 'Redesign website',
+                    id: 'Task 0',
+                    progress: random(),
+                },
+                {
+                    start: daysSince(-15),
+                    duration: '21d',
+                    name: 'Write new content',
+                    id: 'Task 1',
+                    progress: random(),
+                    important: true,
+                },
+                {
+                    start: daysSince(10),
+                    duration: '14d',
+                    name: 'Review',
+                    id: 'Task 3',
+                    progress: random(),
+                },
+                {
+                    start: daysSince(-3),
+                    duration: '4d',
+                    name: 'Publish',
+                    id: 'Task 4',
+                    progress: random(),
+                },
+            ];
+
+            const tasksDependencies = [
+                {
+                    start: daysSince(-2),
+                    end: daysSince(2),
+                    name: 'Redesign website',
+                    id: 'Task 0',
+                    progress: random(),
+                },
+                {
+                    start: daysSince(3),
+                    duration: '6d',
+                    name: 'Write new content',
+                    id: 'Task 1',
+                    progress: random(),
+                    dependencies: 'Task 0',
+                    important: true,
+                },
+                {
+                    start: daysSince(4),
+                    duration: '2d',
+                    name: 'Apply new styles',
+                    id: 'Task 2',
+                    progress: random(),
+                },
+                {
+                    start: daysSince(-4),
+                    end: daysSince(0),
+                    name: 'Review',
+                    id: 'Task 3',
+                    custom_class: 'readonly',
+                    progress: random(),
+                },
+            ];
+            let tasksMany = [
+                {
+                    start: daysSince(-7),
+                    end: daysSince(-5),
+                    name: 'Initial brainstorming',
+                    id: 'Task 0',
+                    progress: random(),
+                },
+                {
+                    start: daysSince(-3),
+                    end: daysSince(1),
+                    name: 'Develop wireframe',
+                    id: 'Task 1',
+                    progress: random(),
+                    dependencies: 'Task 0',
+                },
+                {
+                    start: daysSince(-1),
+                    duration: '4d',
+                    name: 'Client meeting',
+                    id: 'Task 2',
+                    progress: random(),
+                    important: true,
+                },
+                {
+                    start: daysSince(1),
+                    duration: '7d',
+                    name: 'Create prototype',
+                    id: 'Task 3',
+                    dependencies: 'Task 2',
+                    progress: random(),
+                },
+                {
+                    start: daysSince(3),
+                    duration: '5d',
+                    name: 'Test design with users',
+                    dependencies: 'Task 2',
+                    id: 'Task 4',
+                    progress: random(),
+                    important: true,
+                },
+                {
+                    start: daysSince(5),
+                    end: daysSince(10),
+                    name: 'Write technical documentation',
+                    id: 'Task 5',
+                    progress: random(),
+                },
+                {
+                    start: daysSince(8),
+                    duration: '3d',
+                    name: 'Prepare demo',
+                    id: 'Task 6',
+                    progress: random(),
+                },
+                {
+                    start: daysSince(10),
+                    end: daysSince(12),
+                    name: 'Final client review',
+                    id: 'Task 7',
+                    progress: random(),
+                    important: true,
+                },
+                {
+                    start: daysSince(14),
+                    duration: '6d',
+                    name: 'Implement feedback',
+                    id: 'Task 8',
+                    progress: random(),
+                },
+                {
+                    start: daysSince(16),
+                    duration: '4d',
+                    name: 'Launch website',
+                    id: 'Task 9',
+                    progress: random(),
+                    important: true,
+                },
+            ];
+
+            const HOLIDAYS = [
+                { name: 'Republic Day', date: '2024-01-26' },
+                { name: 'Maha Shivratri', date: '2024-02-23' },
+                { name: 'Holi', date: '2024-03-11' },
+                { name: 'Mahavir Jayanthi', date: '2024-04-07' },
+                { name: 'Good Friday', date: '2024-04-10' },
+                { name: 'May Day', date: '2024-05-01' },
+                { name: 'Buddha Purnima', date: '2024-05-08' },
+                { name: 'Krishna Janmastami', date: '2024-08-14' },
+                { name: 'Independence Day', date: '2024-08-15' },
+                { name: 'Ganesh Chaturthi', date: '2024-08-23' },
+                { name: 'Id-Ul-Fitr', date: '2024-09-21' },
+                { name: 'Vijaya Dashami', date: '2024-09-28' },
+                { name: 'Mahatma Gandhi Jayanti', date: '2024-10-02' },
+                { name: 'Diwali', date: '2024-10-17' },
+                { name: 'Guru Nanak Jayanthi', date: '2024-11-02' },
+                { name: 'Christmas', date: '2024-12-25' },
+            ];
+
+            const mutablity = new Gantt('#mutability', tasks);
+            const sideheader = new Gantt('#sideheader', tasksSpread, {
+                today_button: true,
+                view_mode_select: true,
+                holidays: null,
+            });
+
+            const holidays = new Gantt('#holidays', tasksSpread, {
+                holidays: {
+                    '#bfdbfe': [],
+                    '#a3e635': HOLIDAYS,
+                },
+            });
+
+            const ignore = new Gantt('#ignore', tasks, {
+                ignore: ['weekend', ...HOLIDAYS.map((k) => k.date)],
+                holidays: null,
+                scroll_to: daysSince(-10),
+            });
+
+            const styling = new Gantt('#styling', tasksMany, {
+                holidays: null,
+                scroll_to: daysSince(-10),
+            });
+
+            const advanced = new Gantt('#advanced', tasksSpread, {
+                holidays: null,
+                view_mode_select: true,
+                snap_at: '1d',
+                auto_move_label: false,
+                scroll_to: 'today',
+            });
+
+            const UPDATES = [
+                [
+                    mutablity,
+                    {
+                        'mutable-general': 'opp__readonly',
+                        'mutable-dates': 'opp__readonly_dates',
+                        'mutable-progress': 'opp__readonly_progress',
+                    },
+                    (id, val) => {
+                        if (id === 'mutable-general') {
+                            document.getElementById('mutable-dates').checked =
+                                !val;
+                            document.getElementById(
+                                'mutable-progress',
+                            ).checked = !val;
+                        }
+                    },
+                ],
+                [
+                    sideheader,
+                    {
+                        'toggle-today': 'today_button',
+                        'toggle-view-mode': 'view_mode_select',
+                    },
+                ],
+                [
+                    holidays,
+                    {
+                        'toggle-weekends': [
+                            'holidays',
+                            { '#a3e635': HOLIDAYS, '#bfdbfe': 'weekend' },
+                            { '#a3e635': HOLIDAYS, '#bfdbfe': [] },
+                        ],
+                        'custom-weekends': [
+                            'is_weekend',
+                            (d) => d.getDay() === 6 || d.getDay() === 5,
+                            (d) => d.getDay() === 0 || d.getDay() === 6,
+                        ]
+                    },
+                ],
+                [
+                    ignore,
+                    {
+                        'ignore-weekends': ['ignore', ['weekend'], []],
+                    },
+                ],
+                [
+                    styling,
+                    {
+                        'bar-radius': 'bar_corner_radius',
+                        'bar-height': 'bar_height',
+                        'arrow-curve': 'arrow_curve',
+                        'column-width': 'column_width',
+                        'grid-height': 'container_height',
+                        padding: 'padding',
+                    },
+                ],
+                [
+                    advanced,
+                    {
+                        'auto-move-label': 'auto_move_label',
+                        'snap-at-qty': (val) => ({
+                            snap_at:
+                                val +
+                                document.getElementById('snap-at-scale').value,
+                        }),
+                        'snap-at-scale': (val) => ({
+                            snap_at:
+                                document.getElementById('snap-at-qty').value +
+                                val,
+                        }),
+                    },
+                ],
+            ];
+
+            for (let [chart, details, after] of UPDATES) {
+                for (let id in details) {
+                    let el = document.getElementById(id);
+                    el.onchange = (e) => {
+                        let label = details[id];
+                        let val;
+
+                        if (e.currentTarget.type === 'checkbox') {
+                            if (typeof label === 'string') {
+                                let opposite = label.slice(0, 5) === 'opp__';
+                                if (opposite) label = label.slice(5);
+                                val = opposite
+                                    ? !e.currentTarget.checked
+                                    : e.currentTarget.checked;
+                            } else {
+                                val = label[e.currentTarget.checked ? 1 : 2];
+                                label = label[0];
+                            }
+                        } else {
+                            val = +e.currentTarget.value;
+                        }
+
+                        let store = chart.options.scroll_to;
+                        let scroll = chart.$container.scrollLeft;
+                        if (typeof label === 'function') {
+                            chart.update_options({
+                                ...label(val),
+                                scroll_to: null,
+                            });
+                        } else {
+                            chart.update_options({
+                                [label]: val,
+                                scroll_to: null,
+                            });
+                        }
+
+                        chart.options.scroll_to = store;
+                        chart.$container.scrollLeft = scroll;
+                        after && after(id, val, chart);
+                    };
+                }
+            }
+        </script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>
+</file>
+
+<file path="license.txt">
+The MIT License (MIT)
+
+Copyright (c) 2024 Frappe Technologies Pvt. Ltd.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</file>
+
+<file path="package.json">
+{
+    "name": "frappe-gantt",
+    "version": "1.0.4",
+    "description": "A simple, modern, interactive gantt library for the web",
+    "main": "src/index.js",
+    "type": "module",
+    "scripts": {
+        "dev": "vite build --watch",
+        "build": "vite build",
+        "lint": "eslint src/**/*.js",
+        "prettier": "prettier --write \"{src/*,tests/*,rollup.config}.js\"",
+        "prettier-check": "prettier --check \"{src/*,tests/*,rollup.config}.js\""
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/frappe/gantt.git"
+    },
+    "files": [
+        "src",
+        "dist",
+        "README.md"
+    ],
+    "exports": {
+        ".": {
+            "require": "./dist/frappe-gantt.umd.js",
+            "import": "./dist/frappe-gantt.es.js",
+            "style": "./dist/frappe-gantt.css"
+        }
+    },
+    "keywords": [
+        "gantt",
+        "svg",
+        "simple gantt",
+        "project timeline",
+        "interactive gantt",
+        "project management"
+    ],
+    "author": "Faris Ansari",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/frappe/gantt/issues"
+    },
+    "homepage": "https://github.com/frappe/gantt",
+    "devDependencies": {
+        "eslint": "^9.15.0",
+        "eslint-config-prettier": "^2.9.0",
+        "eslint-plugin-prettier": "^2.6.0",
+        "postcss-nesting": "^12.1.2",
+        "prettier": "3.2.5",
+        "vite": "^5.2.10"
+    },
+    "eslintIgnore": [
+        "dist"
+    ],
+    "sideEffects": [
+        "*.css"
+    ]
+}
+</file>
+
+<file path="postcss.config.cjs">
+/* eslint-disable */
+</file>
+
+<file path="README.md">
+<div align="center" markdown="1">
+    <img src=".github/gantt-logo.jpg" width="80">
+    <h1>Frappe Gantt</h1>
+
+**A modern, configurable, Gantt library for the web.**
+
+</div>
+
+![Hero Image](.github/hero-image.png)
+
+## Frappe Gantt
+
+Gantt charts are bar charts that visually illustrate a project's tasks, schedule, and dependencies. With Frappe Gantt, you can build beautiful, customizable, Gantt charts with ease.
+
+You can use it anywhere from hobby projects to tracking the goals of your team at the worksplace.
+
+[ERPNext](https://erpnext.com/) uses Frappe Gantt.
+
+### Motivation
+
+We needed a Gantt View for ERPNext. Surprisingly, we couldn't find a visually appealing Gantt library that was open source - so we decided to build it. Initially, the design was heavily inspired by Google Gantt and DHTMLX.
+
+### Key Features
+
+-   **Customizable Views**: customize the timeline based on various time periods - day, hour, or year, you have it. You can also create your own views.
+-   **Ignore Periods**: exclude weekends and other holidays from your tasks' progress calculation.
+-   **Configure Anything**: spacing, edit access, labels, you can control it all. Change both the style and functionality to meet your needs.
+-   **Multi-lingual Support**: suitable for companies with an international base.
+
+## Usage
+
+Install with:
+
+```bash
+npm install frappe-gantt
+```
+
+Include it in your HTML:
+
+```html
+<script src="frappe-gantt.umd.js"></script>
+<link rel="stylesheet" href="frappe-gantt.css" />
+```
+
+Or from the CDN:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/frappe-gantt/dist/frappe-gantt.umd.js"></script>
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/frappe-gantt/dist/frappe-gantt.css"
+/>
+```
+
+Start using Gantt:
+
+```js
+let tasks = [
+  {
+    id: '1',
+    name: 'Redesign website',
+    start: '2016-12-28',
+    end: '2016-12-31',
+    progress: 20
+  },
+  ...
+]
+let gantt = new Gantt("#gantt", tasks);
+
+// Use .refresh to update the chart
+gantt.tasks.append(...)
+gantt.tasks.refresh()
+```
+
+### Configuration
+
+Frappe Gantt offers a wide range of options to customize your chart.
+
+| **Option**               | **Description**                                               | **Possible Values**                                                                                                                                                           | **Default**                                         |
+| ------------------------ | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `arrow_curve`            | Curve radius of arrows connecting dependencies.               | Any positive integer.                                                                                                                                                         | `5`                                                 |
+| `auto_move_label`        | Move task labels when user scrolls horizontally.              | `true`, `false`                                                                                                                                                               | `false`                                             |
+| `bar_corner_radius`      | Radius of the task bar corners (in pixels).                   | Any positive integer.                                                                                                                                                         | `3`                                                 |
+| `bar_height`             | Height of task bars (in pixels).                              | Any positive integer.                                                                                                                                                         | `30`                                                |
+| `container_height`       | Height of the container.                                      | `auto` - dynamic container height to fit all tasks - _or_ any positive integer (for pixels).                                                                                  | `auto`                                              |
+| `column_width`           | Width of each column in the timeline.                         | Any positive integer.                                                                                                                                                         | 45                                                  |
+| `date_format`            | Format for displaying dates.                                  | Any valid JS date format string.                                                                                                                                              | `YYYY-MM-DD`                                        |
+| `upper_header_height`    | Height of the upper header in the timeline (in pixels).       | Any positive integer.                                                                                                                                                         | `45`                                                |
+| `lower_header_height`    | Height of the lower header in the timeline (in pixels).       | Any positive integer.                                                                                                                                                         | `30`                                                |
+| `snap_at`                | Snap tasks at particular intervel while resizing or dragging. | Any _interval_ (see below)                                                                                                                                                    | `1d`                                                |
+| `infinite_padding`       | Whether to extend timeline infinitely when user scrolls.      | `true`, `false`                                                                                                                                                               | `true`                                              |
+| `holidays`               | Highlighted holidays on the timeline.                         | Object mapping CSS colors to holiday types. Types can either be a) 'weekend', or b) array of _strings_ or _date objects_ or _objects_ in the format `{date: ..., label: ...}` | `{ 'var(--g-weekend-highlight-color)': 'weekend' }` |
+| `is_weekend`             | Determines whether a day is a weekend                         | Function                                                                                                                                                                      | `(d) => d.getDay() === 0 \|\| d.getDay() === 6`     |
+| `ignore`                 | Ignored areas in the rendering                                | `weekend` _or_ Array of strings or date objects (`weekend` can be present to the array also).                                                                                 | `[]`                                                |
+| `language`               | Language for localization.                                    | ISO 639-1 codes like `en`, `fr`, `es`.                                                                                                                                        | `en`                                                |
+| `lines`                  | Determines which grid lines to display.                       | `none` for no lines, `vertical` for only vertical lines, `horizontal` for only horizontal lines, `both` for complete grid.                                                    | `both`                                              |
+| `move_dependencies`      | Whether moving a task automatically moves its dependencies.   | `true`, `false`                                                                                                                                                               | `true`                                              |
+| `padding`                | Padding around task bars (in pixels).                         | Any positive integer.                                                                                                                                                         | `18`                                                |
+| `popup_on`               | Event to trigger the popup display.                           | `click` _or_ `hover`                                                                                                                                                          | `click`                                             |
+| `readonly_progress`      | Disables editing task progress.                               | `true`, `false`                                                                                                                                                               | `false`                                             |
+| `readonly_dates`         | Disables editing task dates.                                  | `true`, `false`                                                                                                                                                               | `false`                                             |
+| `readonly`               | Disables all editing features.                                | `true`, `false`                                                                                                                                                               | `false`                                             |
+| `scroll_to`              | Determines the starting point when chart is rendered.         | `today`, `start`, `end`, or a date string.                                                                                                                                    | `today`                                             |
+| `show_expected_progress` | Shows expected progress for tasks.                            | `true`, `false`                                                                                                                                                               | `false`                                             |
+| `today_button`           | Adds a button to navigate to today’s date.                    | `true`, `false`                                                                                                                                                               | `true`                                              |
+| `view_mode`              | The initial view mode of the Gantt chart.                     | `Day`, `Week`, `Month`, `Year`.                                                                                                                                               | `Day`                                               |
+| `view_mode_select`       | Allows selecting the view mode from a dropdown.               | `true`, `false`                                                                                                                                                               | `false`                                             |
+
+Apart from these ones, two options - `popup` and `view_modes` (plural, not singular) - are available. They have "sub"-APIs, and thus are listed separately.
+
+#### View Mode Configuration
+
+The `view_modes` option determines all the available view modes for the chart. It should be an array of objects.
+
+Each object can have the following properties:
+
+-   `name` (string) - the name of view mode.
+-   `padding` (interval) - the time above.
+-   `step` - the interval of each column
+-   `lower_text` (date format string _or_ function) - the format for text in lower header. Blank string for none. The function takes in `currentDate`, `previousDate`, and `lang`, and should return a string.
+-   `upper_text` (date format string _or_ function) - the format for text in upper header. Blank string for none. The function takes in `currentDate`, `previousDate`, and `lang`, and should return a string.
+-   `upper_text_frequency` (number) - how often the upper text has a value. Utilized in internal calculation to improve performance.
+-   `thick_line` (function) - takes in `currentDate`, returns Boolean determining whether the line for that date should be thicker than the others.
+
+Three other options allow you to override general configuration for this view mode alone:
+
+-   `date_format`
+-   `column_width`
+-   `snap_at`
+    For details, see the above table.
+
+#### Popup Configuration
+
+`popup` is a function. If it returns
+
+-   `false`, there will be no popup.
+-   `undefined`, the popup will be rendered based on manipulation within the function
+-   a HTML string, the popup will be that string.
+
+The function receives one object as an argument, containing:
+
+-   `task` - the task as an object
+-   `chart` - the entire Gantt chart
+-   `get_title`, `get_subtitle`, `get_details` (functions) - get the relevant section as a HTML node.
+-   `set_title`, `set_subtitle`, `set_details` (functions) - take in the HTML of the relevant section
+-   `add_action` (function) - accepts two parameters, `html` and `func` - respectively determining the HTML of the action and the callback when the action is pressed.
+
+### API
+
+Frappe Gantt exposes a few helpful methods for you to interact with the chart:
+
+| **Name**            | **Description**                                       | **Parameters**                                                                                                                                                               |
+| ------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.update_options`   | Re-renders the chart after updating specific options. | `new_options` - object containing new options.                                                                                                                               |
+| `.change_view_mode` | Updates the view mode.                                | `view_mode` - Name of view mode _or_ view mode object (see above) and `maintain_pos` - whether to go back to current scroll position after rerendering, defaults to `false`. |
+| `.scroll_current`   | Scrolls to the current date                           | No parameters.                                                                                                                                                               |
+| `.update_task`      | Re-renders a specific task bar alone                  | `task_id` - id of task and `new_details` - object containing the task properties to be updated.                                                                              |
+
+## Development Setup
+
+If you want to contribute enhancements or fixes:
+
+1. Clone this repo.
+2. `cd` into project directory.
+3. Run `pnpm i` to install dependencies.
+4. `pnpm run build` to build files - or `pnpm run build-dev` to build and watch for changes.
+5. Open `index.html` in your browser.
+6. Make your code changes and test them.
+
+<br />
+<br />
+<div align="center" style="padding-top: 0.75rem;">
+	<a href="https://frappe.io" target="_blank">
+		<picture>
+			<source media="(prefers-color-scheme: dark)" srcset="https://frappe.io/files/Frappe-white.png">
+			<img src="https://frappe.io/files/Frappe-black.png" alt="Frappe Technologies" height="28"/>
+		</picture>
+	</a>
+</div>
+</file>
+
+<file path="vite.config.js">
+
+</file>
+
+</files>

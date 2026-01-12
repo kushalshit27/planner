@@ -1,8 +1,9 @@
+/**
+ * Main entry point
+ */
+
 import { render } from 'preact';
 import { App } from './App';
 import './index.css';
 
-const root = document.getElementById('root');
-if (root) {
-	render(<App />, root);
-}
+render(<App />, document.getElementById('app')!);

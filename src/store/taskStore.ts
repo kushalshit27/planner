@@ -1,131 +1,105 @@
-import { signal } from '@preact/signals';
-import dayjs from 'dayjs';
-import type { Priority, Status, Task } from '../types';
+/**
+ * Task store using Preact Signals
+ * Manages task state and syncs with IndexedDB
+ */
+
+import { computed, signal } from '@preact/signals';
+import type { Task } from '../types';
 import {
-	deleteTaskById,
+	createTask as dbCreateTask,
+	deleteTask as dbDeleteTask,
+	updateTask as dbUpdateTask,
 	getAllTasks,
-	replaceTasks,
-	upsertTask,
 } from '../utils/storageUtils';
 
+// Signal for all tasks
 export const tasks = signal<Task[]>([]);
 
-const palette = [
-	'#3B82F6',
-	'#6366F1',
-	'#22C55E',
-	'#F97316',
-	'#EC4899',
-	'#14B8A6',
-];
+// Signal for loading state
+export const isLoading = signal<boolean>(false);
 
-function buildSampleTasks(): Task[] {
-	const base = dayjs().startOf('week');
-	return [
-		{
-			id: crypto.randomUUID(),
-			title: 'Design layout',
-			description: 'Create the first-pass layout for the weekly timeline',
-			startDate: base.add(2, 'day').toDate(),
-			endDate: base.add(4, 'day').toDate(),
-			priority: 'high',
-			status: 'in-progress',
-			category: 'design',
-			color: palette[1],
-			dependencies: [],
-			createdAt: dayjs().toDate(),
-			updatedAt: dayjs().toDate(),
-		},
-		{
-			id: crypto.randomUUID(),
-			title: 'Connect IndexedDB',
-			description: 'Wire up persistence helpers to hydrate tasks',
-			startDate: base.add(1, 'day').toDate(),
-			endDate: base.add(1, 'day').toDate(),
-			priority: 'medium',
-			status: 'todo',
-			category: 'dev',
-			color: palette[0],
-			dependencies: [],
-			createdAt: dayjs().toDate(),
-			updatedAt: dayjs().toDate(),
-		},
-		{
-			id: crypto.randomUUID(),
-			title: 'Polish timeline',
-			description: 'Improve responsiveness and spacing for bars',
-			startDate: base.add(4, 'day').toDate(),
-			endDate: base.add(6, 'day').toDate(),
-			priority: 'medium',
-			status: 'backlog',
-			category: 'ui',
-			color: palette[2],
-			dependencies: [],
-			createdAt: dayjs().toDate(),
-			updatedAt: dayjs().toDate(),
-		},
-	];
-}
+// Computed signal for tasks sorted by start date
+export const sortedTasks = computed(() => {
+	return [...tasks.value].sort(
+		(a, b) => a.startDate.getTime() - b.startDate.getTime()
+	);
+});
 
-export async function hydrateTasks(): Promise<void> {
-	const rows = await getAllTasks();
-	if (rows.length === 0) {
-		const sample = buildSampleTasks();
-		await replaceTasks(sample);
-		tasks.value = sample;
-		return;
-	}
-	tasks.value = rows;
-}
-
-export async function seedSampleTasks(): Promise<void> {
-	const sample = buildSampleTasks();
-	await replaceTasks(sample);
-	tasks.value = sample;
-}
-
-export async function saveTask(partial: {
-	title: string;
-	description?: string;
-	startDate: Date;
-	endDate: Date;
-	priority?: Priority;
-	status?: Status;
-	category?: string;
-	color?: string;
-}): Promise<void> {
-	const now = dayjs();
-	const task: Task = {
-		id: crypto.randomUUID(),
-		title: partial.title,
-		description: partial.description ?? '',
-		startDate: partial.startDate,
-		endDate: partial.endDate,
-		priority: partial.priority ?? 'medium',
-		status: partial.status ?? 'todo',
-		category: partial.category ?? 'general',
-		color: partial.color ?? palette[0],
-		dependencies: [],
-		createdAt: now.toDate(),
-		updatedAt: now.toDate(),
+// Computed signal for tasks by status
+export const tasksByStatus = computed(() => {
+	const grouped: Record<string, Task[]> = {
+		Backlog: [],
+		'To Do': [],
+		'In Progress': [],
+		Done: [],
 	};
 
-	await upsertTask(task);
-	await hydrateTasks();
+	for (const task of tasks.value) {
+		grouped[task.status].push(task);
+	}
+
+	return grouped;
+});
+
+/**
+ * Load all tasks from IndexedDB
+ */
+export async function loadTasks(): Promise<void> {
+	isLoading.value = true;
+	try {
+		const allTasks = await getAllTasks();
+		tasks.value = allTasks;
+	} catch (error) {
+		console.error('Failed to load tasks:', error);
+	} finally {
+		isLoading.value = false;
+	}
 }
 
-export async function removeTask(id: string): Promise<void> {
-	await deleteTaskById(id);
-	await hydrateTasks();
+/**
+ * Create a new task
+ */
+export async function createTask(task: Task): Promise<void> {
+	try {
+		await dbCreateTask(task);
+		tasks.value = [...tasks.value, task];
+	} catch (error) {
+		console.error('Failed to create task:', error);
+		throw error;
+	}
 }
 
-export async function moveTaskDates(
-	id: string,
-	startDate: Date,
-	endDate: Date
-): Promise<void> {
-	await import('../utils/storageUtils').then(({ updateTaskDates }) =>
-		updateTaskDates(id, startDate, endDate)
-	);
-	await hydrateTasks();
+/**
+ * Update an existing task
+ */
+export async function updateTask(updatedTask: Task): Promise<void> {
+	try {
+		await dbUpdateTask(updatedTask);
+		tasks.value = tasks.value.map((task) =>
+			task.id === updatedTask.id ? updatedTask : task
+		);
+	} catch (error) {
+		console.error('Failed to update task:', error);
+		throw error;
+	}
+}
+
+/**
+ * Delete a task
+ */
+export async function deleteTask(id: string): Promise<void> {
+	try {
+		await dbDeleteTask(id);
+		tasks.value = tasks.value.filter((task) => task.id !== id);
+	} catch (error) {
+		console.error('Failed to delete task:', error);
+		throw error;
+	}
+}
+
+/**
+ * Get a task by ID
+ */
+export function getTaskById(id: string): Task | undefined {
+	return tasks.value.find((task) => task.id === id);
 }
